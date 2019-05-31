@@ -70,5 +70,8 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('role/editRoleDep', 'System\RoleController@editRoleDep');
 
     Route::get('log/getOperationLogs', 'Logs\LogController@getOperationLogs');
+
+    Route::post('overviewmonth', 'Api\ApiController@getOverviewMonthData');
+    Route::get('exportoverviewmonth/{startMonth}/{endMonth}/{type}', 'Api\ApiController@exportOverviewMonthData');
 });
 
