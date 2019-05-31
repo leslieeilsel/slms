@@ -1,0 +1,77 @@
+<template>
+  <div class="mui-content">
+    <div class="mui-content"> 
+        <ul class="mui-table-view mui-grid-view mui-grid-9" style="background: #fff;">
+              <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+                <a href="/#/ding/project/projectSchedule">  
+                      <span class="mui-icon mui-icon-compose"></span>  
+                      <div class="mui-media-body">填报</div>
+                </a>
+              </li>  
+            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+                <a href="/#/ding/project/list">  
+                      <span class="mui-icon mui-icon-bars"></span>  
+                      <div class="mui-media-body">项目</div>
+                </a>
+            </li>  
+            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+                <a href="/#/ding/project/projectScheduleList">  
+                      <span class="mui-icon mui-icon-settings"></span>  
+                      <div class="mui-media-body">进度</div>
+                </a>
+            </li>  
+            <li class="mui-table-view-cell mui-media mui-col-xs-6 mui-col-sm-6">
+                <a href="/#/ding/project/projectSchedule">  
+                      <span class="mui-icon mui-icon-info"></span>  
+                      <div class="mui-media-body">预警</div>
+                </a>
+            </li>  
+        </ul>
+    </div>
+    <nav class="mui-bar mui-bar-tab">
+      <a class="mui-tab-item mui-active" href="/#/ding/project">
+        <span class="mui-icon mui-icon-home"></span>
+        <span class="mui-tab-label">应用</span>
+      </a>
+      <a class="mui-tab-item" href="#">
+        <span class="mui-icon mui-icon-email"><span class="mui-badge">9</span></span>
+        <span class="mui-tab-label">消息</span>
+      </a>
+    </nav>
+  </div> 
+</template>
+<style scope src="./index.css"></style>
+<style scope src="./mui.css"></style>
+<script>
+import * as dd from "dingtalk-jsapi";
+import { getUserId } from "../../../api/ding";
+export default {
+  data() {
+    return {
+    };
+  },
+  mounted() {
+    this.userInfo();
+  },
+  methods: {
+    userInfo() {
+      dd.ready(function() {
+        dd.runtime.permission.requestAuthCode({
+          corpId: "dinge48f324dae7de1df35c2f4657eb6378f",
+          onSuccess: function(result) {
+            getUserId({ code: result.code }).then(res => {
+              if (res.errcode == 0) {
+                sessionStorage.setItem('userid',res.userid);
+              }
+            });
+          },
+          onFail: function(err) {}
+        });
+      });
+    }
+  }
+};
+</script>
+<style scope>
+</style>
+

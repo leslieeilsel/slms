@@ -1,0 +1,51 @@
+.btnGroup {
+    margin-bottom: 10px;
+}
+
+.ivu-form .ivu-date-picker {
+    display: block;
+}
+
+.borderNone input {
+    border: none;
+}
+
+.monthInput input,
+.monthInput .ivu-input-number,
+.monthInput textarea {
+    border-radius: unset;
+}
+
+.collapse .ivu-input-number,
+.monthInput {
+    border-radius: unset;
+}
+
+.ivu-select .ivu-select-dropdown ul {
+    margin-bottom: 0;
+}
+
+.drop-down {
+    font-size: 13px;
+    margin-left: 5px;
+}
+
+.ivu-input-number {
+    width: 100%;
+}
+
+.page {
+    margin-top: 2vh;
+}
+
+.ivu-modal-fullscreen .ivu-modal-body {
+    padding: 0;
+}
+
+.monthAmount .ivu-form-item-content {
+    margin-left: 0 !important;
+}
+
+.required-field .ivu-form-item-label {
+    width: auto !important;
+}

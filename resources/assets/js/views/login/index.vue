@@ -1,12 +1,16 @@
 <template>
   <div id="background" class="content">
-    <p class="user-layout-title">陕西体育彩票财务数据综合管理系统</p>
+  
+    <Row class="header">
+      <img src="../../images/logo.png" width="200px" />
+      <p class="description">沣西集团投资云平台</p>
+    </Row>
     <Row type="flex" justify="center" class-name="row">
       <br>
       <Col class="loginFrom">
-        <Tabs value="name1">
-          <TabPane label="账户密码登录" name="name1"></TabPane>
-        </Tabs>
+<!--        <Tabs value="name1">-->
+<!--          <TabPane label="账户密码登录" name="name1"></TabPane>-->
+<!--        </Tabs>-->
         <Form ref="form" :model="form" :rules="ruleInline">
           <FormItem prop="email">
             <Input type="text" size="large" v-model="form.email" :placeholder="$t('login.username')">
@@ -42,6 +46,11 @@
         </Form>
       </Col>
     </Row>
+<!--    <Footer class="layout-footer-center">-->
+<!--      <p>版权所有：陕西微软创新中心有限公司 陕ICP备15012717号</p>-->
+<!--      <p>地址：陕西省西咸新区沣西新城康定路与兴咸路十字西南角（西部云谷B3楼5层）</p>-->
+<!--      <p>E-mail：mic@micshaanxi.com 邮编：712000 电话：（029）38020667</p>-->
+<!--    </Footer>-->
   </div>
 </template>
 
@@ -108,7 +117,7 @@
             script.src = 'https://cdn.vaptcha.com/v2.js';
             script.async = true;
             script.onload = script.onreadystatechange = function () {
-              if (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete') {
+              if (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete') {
                 resolve();
                 script.onload = script.onreadystatechange = null
               }

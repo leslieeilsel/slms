@@ -3,26 +3,32 @@
 </style>
 <template>
   <div class="main">
-
+    
     <!-- sidebar start -->
     <div class="sidebar-menu-con" :style="{width: '250px', overflow: 'auto'}">
       <shrinkable-menu
-          :open-names="openedSubmenuArr"
-          :menu-list="menuList">
+        :open-names="openedSubmenuArr"
+        :menu-list="menuList">
       </shrinkable-menu>
     </div>
     <!-- sidebar end -->
-
+    
     <!-- header start -->
     <div class="main-header-con">
       <div class="main-header">
         <div class="header-middle-con">
           <div class="main-breadcrumb">
-            陕西体育彩票财务数据综合管理系统
+            <img src="../../images/xixian.png" width="30px"/>
+            <span>沣西集团投资云平台</span>
           </div>
         </div>
         <div class="header-avator-con">
-
+          <!-- -->
+          <Badge dot style="top: 20px;left: 110px;color: #fff">
+            <a href="/#/sys-manage/notify">
+              <Icon type="ios-notifications" size="20" color="#fff"></Icon>
+            </a>
+          </Badge>
           <!--dropdown start -->
           <div class="user-dropdown-menu-con">
             <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
@@ -36,7 +42,7 @@
                   <DropdownItem name="logout" divided>退出登录</DropdownItem>
                 </DropdownMenu>
               </Dropdown>
-              <Avatar :src="avatorPath" style="background: #d3eaec;margin-left: 10px;"></Avatar>
+              <Avatar src="/images/avatar.png" style="margin-left: 10px;"></Avatar>
             </Row>
           </div>
           <!-- dropdown end -->
@@ -47,7 +53,7 @@
       </div>
     </div>
     <!-- header end -->
-
+    
     <!-- router-view start -->
     <div class="single-page-con" :style="{left: '250px'}">
       <div class="single-page">
@@ -55,9 +61,14 @@
           <router-view></router-view>
         </keep-alive>
       </div>
+      <!--      <Footer class="layout-footer-center">-->
+      <!--        <p>版权所有：陕西微软创新中心有限公司 陕ICP备15012717号</p>-->
+      <!--        <p>地址：陕西省西咸新区沣西新城康定路与兴咸路十字西南角（西部云谷B3楼5层）</p>-->
+      <!--        <p>E-mail：mic@micshaanxi.com 邮编：712000 电话：（029）38020667</p>-->
+      <!--      </Footer>-->
     </div>
     <!-- router-view end -->
-
+    <!-- layout footer -->
   </div>
 </template>
 <script>
@@ -65,10 +76,9 @@
   import tagsPageOpened from './components/tags-page-opened.vue';
   import breadcrumbNav from './components/breadcrumb-nav.vue';
   import messageTip from './components/message-tip.vue';
-  import Cookies from 'js-cookie';
-  import util from '@/libs/util.js';
-  import { getRouter } from 'api/system';
-  import layout from 'views/layout';
+  import util from '../../libs/util.js';
+  import {getRouter} from '../../api/system';
+  import layout from '../../views/layout';
   import {logout} from "../../api/login";
 
   export default {
@@ -76,9 +86,9 @@
       shrinkableMenu,
       tagsPageOpened,
       breadcrumbNav,
-      messageTip,
+      messageTip
     },
-    data () {
+    data() {
       return {
         menus: [],
         userName: '',
@@ -86,35 +96,32 @@
       };
     },
     computed: {
-      menuList () {
+      menuList() {
         return this.menus;
       },
-      pageTagsList () {
+      pageTagsList() {
         return this.$store.state.app.pageOpenedList; // 打开的页面的页面对象
       },
-      currentPath () {
+      currentPath() {
         return this.$store.state.app.currentPath; // 当前面包屑数组
       },
-      avatorPath () {
-        return localStorage.avatorImgPath;
-      },
-      cachePage () {
+      cachePage() {
         return this.$store.state.app.cachePage;
       },
-      lang () {
+      lang() {
         return this.$store.state.app.lang;
       },
-      mesCount () {
+      mesCount() {
         return this.$store.state.app.messageCount;
       }
     },
     methods: {
-      init () {
+      init() {
         // if (!this.getObjArr('router')) {
-          getRouter().then(data => {
-            this.menus = this.filterAsyncRouter(data.result);
-            // this.saveObjArr('router', this.menus); //存储路由到localStorage
-          });
+        getRouter().then(data => {
+          this.menus = this.filterAsyncRouter(data.result);
+          // this.saveObjArr('router', this.menus); //存储路由到localStorage
+        });
         // } else {//从localStorage拿到了路由
         //   this.menus = this.getObjArr('router');//拿到路由
         // }
@@ -129,10 +136,10 @@
       saveObjArr(name, data) { //localStorage 存储数组对象的方法
         localStorage.setItem(name, JSON.stringify(data))
       },
-      toggleClick () {
+      toggleClick() {
         this.shrink = !this.shrink;
       },
-      clickDropdown (name) {
+      clickDropdown(name) {
         if (name === 'userCenter') {
           // 用户中心
           // util.openNewPage(this, 'home');
@@ -157,7 +164,7 @@
         }
       },
       filterAsyncRouter(asyncRouterMap) { //遍历后台传来的路由字符串，转换为组件对象
-        const accessedRouters = asyncRouterMap.filter(route => {
+        return asyncRouterMap.filter(route => {
           if (route.component) {
             if (route.component === 'layout') { //Layout组件特殊处理
               route.component = layout;
@@ -170,10 +177,8 @@
           }
           return true;
         });
-
-        return accessedRouters;
       },
-      checkTag (name) {
+      checkTag(name) {
         let openpageHasTag = this.pageTagsList.some(item => {
           if (item.name === name) {
             return true;
@@ -184,12 +189,8 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.init();
     }
   };
 </script>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-
-</style>

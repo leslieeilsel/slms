@@ -177,6 +177,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Hhxsv5\LaravelS\Illuminate\LaravelSServiceProvider::class,
+
     ],
 
     /*

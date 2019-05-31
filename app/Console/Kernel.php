@@ -13,7 +13,11 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        'App\Console\Commands\buildDingProjectJson',
+        'App\Console\Commands\buildProjectGeoJson',
+        'App\Console\Commands\buildLuwangGeoJson',
+        'App\Console\Commands\buildDataVLuWangJsonData',
+        'App\Console\Commands\buildLvHuaJson',
     ];
 
     /**
@@ -24,6 +28,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('buildProjectGeoJson --force')->everyMinute();
+        $schedule->command('buildDingProjectJson --force')->everyMinute();
         // $schedule->command('inspire')
         //          ->hourly();
     }
