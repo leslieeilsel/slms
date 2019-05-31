@@ -26,12 +26,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('logout', 'AuthController@logout');
     Route::post('refresh', 'AuthController@refresh');
     Route::post('user', 'AuthController@user');
-    Route::get('ding/getToken', 'Project\DingController@getToken');
-    Route::post('ding/userId', 'Project\DingController@userId');
-    Route::get('ding/userNotify', 'Project\DingController@userNotify');
-    Route::get('ding/getAuditedProjects', 'Project\DingController@getAuditedProjects');
-    Route::post('ding/projectProgress', 'Project\DingController@projectProgress');
-    Route::post('ding/getAllProjects', 'Project\DingController@getAllProjects');
 
     Route::post('user/regist', 'User\RegistController@registUser');
     Route::any('user/users', 'User\RegistController@getUsers');
@@ -46,47 +40,6 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::get('department/getClassDepartment', 'System\DepartmentController@getClassDepartment');
     Route::post('department/addDepartment', 'System\DepartmentController@add');
     Route::post('department/editDepartment', 'System\DepartmentController@edit');
-
-    Route::get('project/getProjects', 'Project\ProjectController@getProjects');
-    Route::get('project/getAuditedProjects', 'Project\ProjectController@getAuditedProjects');
-    Route::get('project/loadPlan/{id}', 'Project\ProjectController@loadPlan');
-    Route::post('project/getAllWarning', 'Project\ProjectController@getAllWarning');
-    Route::any('project/getAllProjects', 'Project\ProjectController@getAllProjects');
-    Route::post('project/getProjectDictData', 'Project\ProjectController@getProjectDictData');
-    Route::post('project/addProject', 'Project\ProjectController@add');
-    Route::post('project/edit', 'Project\ProjectController@edit');
-    Route::post('project/projectProgress', 'Project\ProjectController@projectProgress');
-    Route::any('project/projectProgressList', 'Project\ProjectController@projectProgressList');
-    Route::post('project/uploadPic', 'Project\ProjectController@uploadPic');
-    Route::post('project/projectPlanInfo', 'Project\ProjectController@projectPlanInfo');
-    Route::post('project/getData', 'Project\ProjectController@getData');
-    Route::post('project/projectLedgerAdd', 'Project\ProjectController@projectLedgerAdd');
-    Route::post('project/projectQuarter', 'Project\ProjectController@projectQuarter');
-    Route::post('project/editProjectProgress', 'Project\ProjectController@editProjectProgress');
-    Route::post('project/auditProjectProgress', 'Project\ProjectController@auditProjectProgress');
-    Route::post('project/buildPlanFields', 'Project\ProjectController@buildPlanFields');
-    Route::post('project/auditProject', 'Project\ProjectController@auditProject');
-    Route::post('project/getEditFormData', 'Project\ProjectController@getEditFormData');
-    Route::post('project/toAudit', 'Project\ProjectController@toAudit');
-    Route::post('project/toAuditSchedule', 'Project\ProjectController@toAuditSchedule');
-    Route::post('project/actCompleteMoney', 'Project\ProjectController@actCompleteMoney');
-    Route::post('project/getProjectNoScheduleList', 'Project\ProjectController@getProjectNoScheduleList');
-    Route::post('project/projectScheduleMonth', 'Project\ProjectController@projectScheduleMonth');
-    Route::post('project/noAudit', 'Project\ProjectController@noAudit');
-    Route::post('project/projectDelete', 'Project\ProjectController@projectDelete');
-    Route::post('project/projectScheduleDelete', 'Project\ProjectController@projectScheduleDelete');
-    Route::post('project/locationPosition', 'Project\ProjectController@locationPosition');
-    Route::post('project/getProjectById', 'Project\ProjectController@getProjectById');
-
-// 添加台账导出
-    Route::get('project/exportSchedule', 'Project\LedgerController@exportSchedule');
-    Route::get('project/exportLedger', 'Project\LedgerController@export');
-    Route::post('project/projectLedgerList', 'Project\LedgerController@projectLedgerList');
-    Route::get('project/downLoadSchedule', 'Project\LedgerController@downLoadSchedule');
-    Route::get('project/exportProject', 'Project\LedgerController@exportProject');
-
-//项目调整
-    Route::post('project/projectAdjustment', 'Project\ProjectController@projectAdjustment');
 
     Route::get('dict/dicts', 'System\DictController@dicts');
     Route::post('dict/addDict', 'System\DictController@addDict');
@@ -117,6 +70,5 @@ Route::group(['middleware' => 'api'], function ($router) {
     Route::post('role/editRoleDep', 'System\RoleController@editRoleDep');
 
     Route::get('log/getOperationLogs', 'Logs\LogController@getOperationLogs');
-    Route::get('datav/project', 'DataV\ProjectController@getDataVProject');
 });
 

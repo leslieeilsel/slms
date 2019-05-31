@@ -12,26 +12,6 @@ export const constantRouterMap = [
   { path: '/login', component: require('views/login/index') },
   { path: '/password/send', component: require('views/login/password/email') },
   { path: '/password/reset/:token', component: require('views/login/password/reset') },
-  { path: '/ding/project', component: require('views/ding/project/index') },
-  { path: '/ding/project/list', component: require('views/ding/project/list') },
-  { path: '/ding/project/projectSchedule', component: require('views/ding/project/projectSchedule') },
-  { path: '/ding/project/projectScheduleList', component: require('views/ding/project/projectScheduleList') },
-  {
-    path: '/',
-    component: layout,
-    redirect: '/home',
-    children: [{
-      path: 'projects/preview',
-      component: require('views/project/projects/preview'),
-      // name: 'projectPreview',
-      meta: {
-        title: '查看项目',
-        noCache: true,
-        icon: '',
-        roles: ['admin']
-      }
-    }]
-  },
 ];
 
 // 导出所有的路由配置
