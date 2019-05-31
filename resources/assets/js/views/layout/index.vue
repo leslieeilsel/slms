@@ -18,8 +18,7 @@
       <div class="main-header">
         <div class="header-middle-con">
           <div class="main-breadcrumb">
-            <img src="../../images/xixian.png" width="30px"/>
-            <span>沣西集团投资云平台</span>
+            陕西体育彩票财务数据综合管理系统
           </div>
         </div>
         <div class="header-avator-con">

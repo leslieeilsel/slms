@@ -57,4 +57,24 @@ class Dict extends Model
         return $category ? $category->pluck('title', 'value')->toArray() : [];
     }
 
+
+    /**
+     * 批量获取数据字典数据
+     *
+     * @param $nameArr
+     * @return array
+     */
+    public static function getDictDataByName($nameArr)
+    {
+        $data = [];
+
+        if ($nameArr) {
+            foreach ($nameArr as $key => $name) {
+                $data[$key] = self::getOptionsByName($name);
+            }
+        }
+
+        return $data;
+    }
+
 }
