@@ -95,7 +95,8 @@
           password: [
             {required: true, message: '请填写登录密码', trigger: 'blur'},
           ]
-        }
+        },
+        basePath: window.document.location.hostname,
       }
     },
     methods: {
@@ -131,8 +132,9 @@
       }
     },
     mounted() {
+      let vid = this.basePath === 'localhost' ? '5bffa64bfc650eb8507698ed' : '5cf4e76afc650fc6543fada2';
       let config = extend({
-        vid: '5bffa64bfc650eb8507698ed',
+        vid: vid,
         container: this.$refs.vaptcha,
         style: this.vpStyle
       }, this.$props);
