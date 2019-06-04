@@ -6,8 +6,6 @@
 # 克隆项目
 git clone https://github.com/leslieeilsel/slms.git
 
-# 切换到icp分支
-
 # 安装composer依赖包
 cd slms
 composer install
