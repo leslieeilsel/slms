@@ -4,6 +4,7 @@ public/js
 /vendor
 /.idea
 /.vscode
+/.VSCodeCounter
 /.vagrant
 Homestead.json
 Homestead.yaml
