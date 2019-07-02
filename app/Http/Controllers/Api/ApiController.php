@@ -20,7 +20,7 @@ class ApiController extends Controller
     {
         $param = $request->input();
         $report = new FeeOverviewMonthReport();
-        $data = $report->getOverviewMonthData($param);
+        $data = $report->getOverviewMonthData($param, 'page');
 
         return response()->json(['result' => $data, 'baseUrl' => env('APP_URL')], 200);
     }

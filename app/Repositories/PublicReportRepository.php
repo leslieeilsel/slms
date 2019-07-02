@@ -118,17 +118,23 @@ class PublicReportRepository
      *
      * @param array $this_year
      * @param array $last_year
+     * @param string $action
      * @return array
      */
-    public function greating($this_year, $last_year)
+    public function greating($this_year, $last_year, $action)
     {
         $great = [];
         $temp[] = $this_year;
         $temp[] = $last_year;
         foreach ($temp[0] as $tk => $tv) {
             if ($temp[1][$tk] != 0) {
-                $per = (($tv / $temp[1][$tk]) - 1) * 100;
-                $great[$tk] = number_format($per, 1) . '%';
+                if ($action === 'page') {
+                    $per = (($tv / $temp[1][$tk]) - 1) * 100;
+                    $great[$tk] = number_format($per, 1) . '%';
+                } else {
+                    $per = ($tv / $temp[1][$tk]) - 1;
+                    $great[$tk] = $per;
+                }
             } else {
                 $great[$tk] = '-- %';
             }

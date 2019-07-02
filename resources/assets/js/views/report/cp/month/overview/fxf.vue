@@ -9,8 +9,8 @@
                       @on-change="endChange"></DatePicker>
           <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
         </Col>
-        <Button class="exportReport" :loading="expLoading" @click="exportData" type="primary" :disabled="btnDisable"
-                icon="md-cloud-upload">导出报表
+        <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload">
+          导出报表
         </Button>
       </Row>
       <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
@@ -19,13 +19,12 @@
   </div>
 </template>
 <script>
-  import {getOverviewMonthData, exportOverviewMonthData} from 'api/report';
+  import {getOverviewMonthData} from '../../../../../api/report';
   import './table.css';
 
   export default {
     data() {
       return {
-        expLoading: false,
         btnDisable: true,
         disable: true,
         loading: false,
@@ -181,16 +180,14 @@
           });
         } else {
           if ((startArray[0] < endArray[0]) || (startArray[0] > endArray[0])) {
-            this.$Message.info({
-              content: '选择时间不能跨年，请重新选择！',
-              duration: 5,
+            this.$Message.error({
+              content: '过滤时间不能跨年，请重新选择！',
               closable: true
             });
           }
           if (endArray[1] < startArray[1]) {
-            this.$Message.info({
+            this.$Message.error({
               content: '开始月份不能大于结束月份，请重新选择！',
-              duration: 5,
               closable: true
             });
           }

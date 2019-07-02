@@ -24,7 +24,7 @@ class FeeOverviewMonthReport
      */
     public function export($params)
     {
-        $data = $this->getOverviewMonthData($params);
+        $data = $this->getOverviewMonthData($params, 'export');
         $startMonth = str_replace('-', '.', $params['startMonth']);
         $endMonth = str_replace('-', '.', $params['endMonth']);
         // 创建一个Spreadsheet对象
@@ -117,16 +117,26 @@ class FeeOverviewMonthReport
         $spreadsheet->getActiveSheet()->getStyle('A3:A20')->applyFromArray($centerStyleArray);
         $spreadsheet->getActiveSheet()->getStyle('B3:Q4')->applyFromArray($centerStyleArray);
         // 设置边框
-        $borderStyleArray = [
+        $allBordersStyleArray = [
             'borders' => [
                 'allBorders' => [
                     'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A1:Q20')->applyFromArray($borderStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A3:Q20')->applyFromArray($allBordersStyleArray);
+        $outlineBordersStyleArray = [
+            'borders' => [
+                'outline' => [
+                    'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN
+                ],
+            ],
+        ];
+        $spreadsheet->getActiveSheet()->getStyle('A2:Q2')->applyFromArray($outlineBordersStyleArray);
         // 设置千分位
-        $spreadsheet->getActiveSheet()->getStyle('B5:Q18')->getNumberFormat()->setFormatCode(\PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_NUMBER);
+        $spreadsheet->getActiveSheet()->getStyle('B5:Q18')->getNumberFormat()->setFormatCode('#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('B19:Q19')->getNumberFormat()->setFormatCode('0.0%');
         // 重命名 worksheet
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
@@ -154,9 +164,10 @@ class FeeOverviewMonthReport
      * 入口函数
      *
      * @param array $params
+     * @param string $action
      * @return array
      */
-    public function getOverviewMonthData($params)
+    public function getOverviewMonthData($params, $action)
     {
         $body = [];
         $reportType = $params['reportType'];
@@ -165,16 +176,16 @@ class FeeOverviewMonthReport
 
         switch ($reportType) {
             case 'fxf':
-                $body = $this->getFxfOverviewMonthData($date);
+                $body = $this->getFxfOverviewMonthData($date, $action);
                 break;
             case 'gyj':
-                $body = $this->getGyjOverviewMonthData($date);
+                $body = $this->getGyjOverviewMonthData($date, $action);
                 break;
             case 'yj':
-                $body = $this->getYjOverviewMonthData($date);
+                $body = $this->getYjOverviewMonthData($date, $action);
                 break;
             case 'fj':
-                $body = $this->getFjOverviewMonthData($date);
+                $body = $this->getFjOverviewMonthData($date, $action);
                 break;
         }
 
@@ -185,13 +196,14 @@ class FeeOverviewMonthReport
      * 发行分配概览表
      *
      * @param array $date
+     * @param string $action
      * @return array
      */
-    public function getFxfOverviewMonthData($date)
+    public function getFxfOverviewMonthData($date, $action)
     {
         $fee = ['0.04', '0.04', '0.04', '0.03', '0.005', '0.03', '0.015'];
-        $body = $this->getMonthFeeData($date, $fee);
-        $body = $this->bodyFormat($body);
+        $body = $this->getMonthFeeData($date, $fee, $action);
+        $body = $this->bodyFormat($body, $action);
 
         return $body;
     }
@@ -200,13 +212,14 @@ class FeeOverviewMonthReport
      * 公益金分配概览表
      *
      * @param array $date
+     * @param string $action
      * @return array
      */
-    public function getGyjOverviewMonthData($date)
+    public function getGyjOverviewMonthData($date, $action)
     {
         $fee = ['0.0925', '0.09', '0.085', '0.07', '0.045', '0.055', '0.05'];
-        $body = $this->getMonthFeeData($date, $fee);
-        $body = $this->bodyFormat($body);
+        $body = $this->getMonthFeeData($date, $fee, $action);
+        $body = $this->bodyFormat($body, $action);
 
         return $body;
     }
@@ -215,13 +228,14 @@ class FeeOverviewMonthReport
      * 佣金分配概览表
      *
      * @param array $date
+     * @param string $action
      * @return array
      */
-    public function getYjOverviewMonthData($date)
+    public function getYjOverviewMonthData($date, $action)
     {
         $fee = ['0.08', '0.08', '0.08', '0.08', '0.08', '0.08', '0.1'];
-        $body = $this->getMonthFeeData($date, $fee);
-        $body = $this->bodyFormat($body);
+        $body = $this->getMonthFeeData($date, $fee, $action);
+        $body = $this->bodyFormat($body, $action);
 
         return $body;
     }
@@ -230,13 +244,14 @@ class FeeOverviewMonthReport
      * 返奖分配概览表
      *
      * @param array $date
+     * @param string $action
      * @return array
      */
-    public function getFjOverviewMonthData($date)
+    public function getFjOverviewMonthData($date, $action)
     {
         $fee = ['0.5', '0.51', '0.53', '0.59', '0.73', '0.65', '0.65'];
-        $body = $this->getMonthFeeData($date, $fee);
-        $body = $this->bodyFormat($body);
+        $body = $this->getMonthFeeData($date, $fee, $action);
+        $body = $this->bodyFormat($body, $action);
 
         return $body;
     }
@@ -246,15 +261,16 @@ class FeeOverviewMonthReport
      *
      * @param array $date
      * @param array $fee
+     * @param string $action
      * @return array
      */
-    protected function getMonthFeeData($date, $fee)
+    protected function getMonthFeeData($date, $fee, $action)
     {
         $body = [];
         $jin = [];
         $jinPer = [];
         $sale_jin = [];
-        $sale = $this->getFeeMonthReportData($date);
+        $sale = $this->getFeeMonthReportData($date, $action);
         //对应费率
         if (!empty($sale)) {
             foreach ($sale as $sk => $sv) {
@@ -292,9 +308,10 @@ class FeeOverviewMonthReport
 
     /**
      * @param array $date
+     * @param string $action
      * @return array
      */
-    public function getFeeMonthReportData($date)
+    public function getFeeMonthReportData($date, $action)
     {
         $query = DB::table('ibiart_slms_sale_m_summary')->select('year', 'region_id', 'game_type', 'game_num', DB::raw("sum(sale_amt) as sale"));
         $query->whereIn('sale_at', $this->buildMonthList($date));
@@ -325,7 +342,7 @@ class FeeOverviewMonthReport
         //添加合计+增幅行
         $this_year_ct = $publicFun->array_sum_column($this_year);
         $last_year_ct = $publicFun->array_sum_column($last_year);
-        $great = $publicFun->greating($this_year_ct, $last_year_ct);
+        $great = $publicFun->greating($this_year_ct, $last_year_ct, $action);
         $order = $publicFun->orderGreaating($great);
 
         array_splice($this_year_ct, 0, 1, '合计');
@@ -367,9 +384,10 @@ class FeeOverviewMonthReport
      * 数字格式化
      *
      * @param $body
+     * @param $action
      * @return array
      */
-    public function bodyFormat($body)
+    public function bodyFormat($body, $action)
     {
         $newBody = [];
         foreach ($body as $key => $rows) {
@@ -377,7 +395,11 @@ class FeeOverviewMonthReport
                 $newBody[$key] = $rows;
             } else {
                 foreach ($rows as $k => $row) {
-                    $newBody[$key][$k] = ($k === 0) ? $row : number_format($row, 2);
+                    if ($action === 'page') {
+                        $newBody[$key][$k] = ($k === 0) ? $row : number_format($row, 2);
+                    } else {
+                        $newBody[$key][$k] = ($k === 0) ? $row : $row;
+                    }
                 }
             }
         }
