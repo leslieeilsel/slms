@@ -393,7 +393,7 @@
           content: "您确认要删除所选的 " + this.selectCount + " 条数据?",
           onOk: () => {
             let ids = "";
-            this.selectList.forEach(function(e) {
+            this.selectList.forEach(function (e) {
               ids += e.id + ",";
             });
             ids = ids.substring(0, ids.length - 1);
