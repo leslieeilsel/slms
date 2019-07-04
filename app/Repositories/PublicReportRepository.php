@@ -46,9 +46,8 @@ class PublicReportRepository
     public function dataByYear($data)
     {
         $year = [];
-        $region = $this->getRegionBut();//地市text
         foreach ($data as $dk => $dv) {
-            array_splice($dv, 0, 1, $region[$dv['region_id']]);
+            array_splice($dv, 0, 1, $dv['region_name']);
             array_splice($dv, 1, 1);
             $dv['tc8'] = $dv['tc1'] + $dv['tc2'] + $dv['tc3'] + $dv['tc4'] + $dv['tc5'] + $dv['tc6'] + $dv['tc7'];
             $year[] = $dv;
@@ -161,7 +160,7 @@ class PublicReportRepository
         rsort($result);
         $flip = array_flip($result);
         foreach ($temp as $tk => $tv) {
-            $order[$tk] = strval($flip[$tv] + 1);
+            $order[$tk] = ($tv === '-- ') ? '--' : strval($flip[$tv] + 1);
         }
         //首位汉子排名为0
         array_splice($order, 0, 0, '0');

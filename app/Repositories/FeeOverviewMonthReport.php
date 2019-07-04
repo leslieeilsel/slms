@@ -285,7 +285,7 @@ class FeeOverviewMonthReport
                         $sale[$sk]["fee" . $k] = $jv;
                         $k++;
                     }
-                    $sale_jin[] = $sale[$sk];
+                    $sale_jin[$sk] = $sale[$sk];
                 } else {
                     $k = 0;//费率下标
                     foreach ($sv as $svk => $svv) {
@@ -295,7 +295,7 @@ class FeeOverviewMonthReport
                     $jinPerCount = array_sum($jinPer);
                     $jinPer["fee" . $k] = $jinPerCount;
                     $jin[$sk] = $jinPer;
-                    $sale_jin[] = array_merge($sale[$sk], $jin[$sk]);
+                    $sale_jin[$sk] = array_merge($sale[$sk], $jin[$sk]);
                 }
                 //合并销量和公益金
                 $jinPer = [];
@@ -313,32 +313,29 @@ class FeeOverviewMonthReport
      */
     public function getFeeMonthReportData($date, $action)
     {
-        $query = DB::table('ibiart_slms_sale_m_summary')->select('year', 'region_id', 'game_type', 'game_num', DB::raw("sum(sale_amt) as sale"));
-        $query->whereIn('sale_at', $this->buildMonthList($date));
-        $query->groupBy('year', 'region_id', 'game_type', 'game_num');
-        $sql = $query->toSql();
-        $bindings = $query->getBindings();
-        $data = DB::select("SELECT region_id,year,
-                                SUM(case when game_num IN('A0009','A0011','A0034') then sale else 0 end) as tc1,
-                                SUM(case when game_num='A0014' then sale else 0 end) as tc2, 
-                                SUM(case when game_num='A0010' then sale else 0 end) as tc3,
-                                SUM(case when game_num='A0052' then sale else 0 end) as tc4, 
-                                SUM(case when game_type=2 then sale else 0 end) as tc5,
-                                SUM(case when game_num IN('B009','B010','B012','B002') then sale else 0 end) as tc6,
-                                SUM(case when game_type=0 then sale else 0 end) as tc7
-                            FROM(" . $sql . ") as base 
-                            GROUP BY year,region_id", $bindings);
+        // $query = DB::table('slms_sum_m_cp_region')->select(DB::raw("left(date, 4) as year"), 'region_name', 'game_type', 'game_num', DB::raw("sum(sale_amt) as sale"));
+        // $query->whereIn('sale_at', $this->buildMonthList($date));
+        // $query->groupBy('year', 'region_id', 'game_type', 'game_num');
+        // $sql = $query->toSql();
+        // $bindings = $query->getBindings();
+        $a = 1;
+        $data = DB::table('slms_sum_m_cp_region as amt')
+            ->join('ibiart_slms_game as game', 'game.cnum', '=', 'amt.game_id')
+            ->select('amt.region_name', DB::raw("left(amt.date, 4) as year"),
+                DB::raw("SUM(case when game.num IN('A0009','A0011','A0034') then amt.sale_amt else 0 end) as tc1"),
+                DB::raw("SUM(case when game.num='A0014' then amt.sale_amt else 0 end) as tc2"), 
+                DB::raw("SUM(case when game.num='A0010' then amt.sale_amt else 0 end) as tc3"),
+                DB::raw("SUM(case when game.num='A0052' then amt.sale_amt else 0 end) as tc4"), 
+                DB::raw("SUM(case when game.type=2 then amt.sale_amt else 0 end) as tc5"),
+                DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then amt.sale_amt else 0 end) as tc6"),
+                DB::raw("SUM(case when game.type=0 then amt.sale_amt else 0 end) as tc7"))
+            ->groupBy('year', 'amt.region_name')->whereIn('date', $this->buildMonthList($date))->get();
         $data = collect($data)->groupBy('year');
 
         $publicFun = new PublicReportRepository();
-
         //组织今年-同比年数据
-        $this_year = $publicFun->dataByYear($data[$this->choose_year]);
-        if (!empty($data[$this->last_year])) {
-            $last_year = $publicFun->dataByYear($data[$this->last_year]);
-        } else {
-            $last_year = [];
-        }
+        $this_year = !empty($data[$this->choose_year]) ? $publicFun->dataByYear($data[$this->choose_year]) : [];
+        $last_year = !empty($data[$this->last_year]) ? $publicFun->dataByYear($data[$this->last_year]) : [];
         //添加合计+增幅行
         $this_year_ct = $publicFun->array_sum_column($this_year);
         $last_year_ct = $publicFun->array_sum_column($last_year);
@@ -351,10 +348,10 @@ class FeeOverviewMonthReport
         array_splice($order, 0, 1, '同比增幅排名');
         //组织body
         $body = $this_year;
-        $body[] = $this_year_ct;
-        $body[] = $last_year_ct;
-        $body[] = $great;
-        $body[] = $order;
+        $body[12] = $this_year_ct;
+        $body[13] = $last_year_ct;
+        $body[14] = $great;
+        $body[15] = $order;
 
         return $body;
     }
@@ -373,8 +370,8 @@ class FeeOverviewMonthReport
         $this->choose_year = $startDate[0];
         $this->last_year = $this->choose_year - 1;
         for ($i = $startDate[1]; $i <= $endDate[1]; $i++) {
-            $dates[] = $this->choose_year . '-' . $i . '-01';
-            $dates[] = $this->choose_year - 1 . '-' . $i . '-01';
+            $dates[] = $this->choose_year . '-' . $i;
+            $dates[] = $this->choose_year - 1 . '-' . $i;
         }
 
         return $dates;

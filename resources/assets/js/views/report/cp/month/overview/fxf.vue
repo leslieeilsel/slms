@@ -2,16 +2,39 @@
   <div>
     <Card>
       <Row>
-        <Col span="12">
-          <DatePicker id="startMonth" type="month" placeholder="开始时间" style="width: 200px" :editable=false
+      <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+        <FormItem label="报表类型">
+            <Select v-model="searchForm.report_type" style="width: 200px" @on-change="switchSearchForm">
+                <Option value="month">月报表</Option>
+                <Option value="day">日报表</Option>
+            </Select>
+        </FormItem>
+        <span v-if="monthShow">
+        <Form-item label="开始时间" prop="startMonth">
+          <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px" :editable=false
                       @on-change="startChange"></DatePicker>
-          <DatePicker id="endMonth" type="month" placeholder="结束时间" style="width: 200px" :editable=false
+        </Form-item>
+        <Form-item label="结束时间" prop="endMonth">
+          <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px" :editable=false
                       @on-change="endChange"></DatePicker>
-          <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
-        </Col>
-        <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload">
-          导出报表
-        </Button>
+        </Form-item>
+        </span>
+        
+        <span v-if="dayShow">
+          <Form-item label="开始时间" prop="startMonth">
+            <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px" :editable=false
+                        @on-change="startChange"></DatePicker>
+          </Form-item>
+          <Form-item label="结束时间" prop="endMonth">
+            <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px" :editable=false
+                        @on-change="endChange"></DatePicker>
+          </Form-item>
+        </span>
+        <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
+          <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload">
+            导出报表
+          </Button>
+      </Form>
       </Row>
       <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
              ref="table"></Table>
@@ -25,6 +48,13 @@
   export default {
     data() {
       return {
+        monthShow: true,
+        dayShow: false,
+        searchForm: {
+          'report_type': 'month',
+          'endMonth': '',
+          'startMonth': '',
+        },
         btnDisable: true,
         disable: true,
         loading: false,
@@ -148,8 +178,8 @@
           }
         ],
         data: [],
-        startValue: null,
-        endValue: null,
+        startValue: '',
+        endValue: '',
         startArray: [],
         endArray: []
       }
@@ -195,6 +225,17 @@
       },
       exportData() {
         window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf';
+      },
+      switchSearchForm(e) {
+        if (e === 'day') {
+          this.dayShow = true;
+          this.monthShow = false;
+        } else {
+          this.dayShow = false;
+          this.monthShow = true;
+        }
+        this.searchForm.startMonth = this.searchForm.endMonth = this.startValue = this.endValue= '';
+        this.disable = true;
       }
     }
   }
