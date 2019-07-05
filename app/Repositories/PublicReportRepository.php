@@ -51,7 +51,6 @@ class PublicReportRepository
             array_splice($dv, 1, 1);
             $dv['tc8'] = $dv['tc1'] + $dv['tc2'] + $dv['tc3'] + $dv['tc4'] + $dv['tc5'] + $dv['tc6'] + $dv['tc7'];
             $year[] = $dv;
-            array_splice($year, 12, 2);//去除省直，互联网
         }
 
         return $year;

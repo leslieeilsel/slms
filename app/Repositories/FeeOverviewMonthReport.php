@@ -27,6 +27,7 @@ class FeeOverviewMonthReport
         $data = $this->getOverviewMonthData($params, 'export');
         $startMonth = str_replace('-', '.', $params['startMonth']);
         $endMonth = str_replace('-', '.', $params['endMonth']);
+        $range = $params['range'] === 'month' ? '月' : '日';
         // 创建一个Spreadsheet对象
         $spreadsheet = new Spreadsheet();
         // 设置文档属性
@@ -39,11 +40,11 @@ class FeeOverviewMonthReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', $startMonth . '-' . $endMonth . '发行费分配概览（月报）')
+            ->setCellValue('A1', $startMonth . '-' . $endMonth . '发行费分配概览（'. $range .'报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '市区')
-            ->setCellValue('B3', '月体育彩票销量')
-            ->setCellValue('J3', '月分配体彩发行费')
+            ->setCellValue('B3', ''. $range .'体育彩票销量')
+            ->setCellValue('J3', ''. $range .'分配体彩发行费')
             ->setCellValue('Q3', '发行费合计')
             ->setCellValue('B4', '概率游戏')
             ->setCellValue('C4', '大乐透')
@@ -144,7 +145,7 @@ class FeeOverviewMonthReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="发行费分配概览-月报.xlsx"');
+        header('Content-Disposition: attachment;filename="发行费分配概览-'. $range .'报.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');
@@ -313,29 +314,28 @@ class FeeOverviewMonthReport
      */
     public function getFeeMonthReportData($date, $action)
     {
-        // $query = DB::table('slms_sum_m_cp_region')->select(DB::raw("left(date, 4) as year"), 'region_name', 'game_type', 'game_num', DB::raw("sum(sale_amt) as sale"));
-        // $query->whereIn('sale_at', $this->buildMonthList($date));
-        // $query->groupBy('year', 'region_id', 'game_type', 'game_num');
-        // $sql = $query->toSql();
-        // $bindings = $query->getBindings();
-        $a = 1;
-        $data = DB::table('slms_sum_m_cp_region as amt')
-            ->join('ibiart_slms_game as game', 'game.cnum', '=', 'amt.game_id')
-            ->select('amt.region_name', DB::raw("left(amt.date, 4) as year"),
-                DB::raw("SUM(case when game.num IN('A0009','A0011','A0034') then amt.sale_amt else 0 end) as tc1"),
-                DB::raw("SUM(case when game.num='A0014' then amt.sale_amt else 0 end) as tc2"), 
-                DB::raw("SUM(case when game.num='A0010' then amt.sale_amt else 0 end) as tc3"),
-                DB::raw("SUM(case when game.num='A0052' then amt.sale_amt else 0 end) as tc4"), 
-                DB::raw("SUM(case when game.type=2 then amt.sale_amt else 0 end) as tc5"),
-                DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then amt.sale_amt else 0 end) as tc6"),
-                DB::raw("SUM(case when game.type=0 then amt.sale_amt else 0 end) as tc7"))
-            ->groupBy('year', 'amt.region_name')->whereIn('date', $this->buildMonthList($date))->get();
+        $table = $date['range'] === 'month' ? 'slms_sum_m_cp_region' : 'slms_sum_d_cp_region';
+        $data = DB::table($table)
+            ->join('ibiart_slms_game as game', 'game.cnum', '=', 'game_id')
+            ->select('region_name', DB::raw("left(date, 4) as year"),
+                DB::raw("SUM(case when game.num IN('A0009','A0011','A0034') then sale_amt else 0 end) as tc1"),
+                DB::raw("SUM(case when game.num='A0014' then sale_amt else 0 end) as tc2"),
+                DB::raw("SUM(case when game.num='A0010' then sale_amt else 0 end) as tc3"),
+                DB::raw("SUM(case when game.num='A0052' then sale_amt else 0 end) as tc4"),
+                DB::raw("SUM(case when game.type=2 then sale_amt else 0 end) as tc5"),
+                DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then sale_amt else 0 end) as tc6"),
+                DB::raw("SUM(case when game.type=0 then sale_amt else 0 end) as tc7"))
+            ->whereIn('date', $this->buildMonthList($date))
+            ->whereIn('region_num', ['6101', '6106', '6107', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
+            ->groupBy('year', 'region_name')
+            ->orderBy('region_num')
+            ->get();
         $data = collect($data)->groupBy('year');
 
         $publicFun = new PublicReportRepository();
         //组织今年-同比年数据
-        $this_year = !empty($data[$this->choose_year]) ? $publicFun->dataByYear($data[$this->choose_year]) : [];
-        $last_year = !empty($data[$this->last_year]) ? $publicFun->dataByYear($data[$this->last_year]) : [];
+        $this_year = !empty($data[$this->choose_year]) ? $publicFun->dataByYear($data[$this->choose_year]) : $this->setZeroData($this->choose_year);
+        $last_year = !empty($data[$this->last_year]) ? $publicFun->dataByYear($data[$this->last_year]) : $this->setZeroData($this->last_year);
         //添加合计+增幅行
         $this_year_ct = $publicFun->array_sum_column($this_year);
         $last_year_ct = $publicFun->array_sum_column($last_year);
@@ -370,8 +370,8 @@ class FeeOverviewMonthReport
         $this->choose_year = $startDate[0];
         $this->last_year = $this->choose_year - 1;
         for ($i = $startDate[1]; $i <= $endDate[1]; $i++) {
-            $dates[] = $this->choose_year . '-' . $i;
-            $dates[] = $this->choose_year - 1 . '-' . $i;
+            $dates[] = $this->choose_year . '-' . sprintf("%02d", $i);
+            $dates[] = $this->choose_year - 1 . '-' . sprintf("%02d", $i);
         }
 
         return $dates;
@@ -392,6 +392,7 @@ class FeeOverviewMonthReport
                 $newBody[$key] = $rows;
             } else {
                 foreach ($rows as $k => $row) {
+                    $row =  ($k !== 0 && $row == 0) ? '0.00' : $row;
                     if ($action === 'page') {
                         $newBody[$key][$k] = ($k === 0) ? $row : number_format($row, 2);
                     } else {
@@ -402,5 +403,26 @@ class FeeOverviewMonthReport
         }
 
         return $newBody;
+    }
+
+    public function setZeroData($year) {
+        $region = ['西安', '杨凌', '咸阳', '渭南', '宝鸡', '铜川', '商洛', '安康', '汉中', '延安', '榆林', '韩城'];
+
+        $data = [];
+        for ($i = 0; $i < 12; $i++) {
+            $data[$i] = [
+                $region[$i],
+                'tc1' => 0,
+                'tc2' => 0,
+                'tc3' => 0,
+                'tc4' => 0,
+                'tc5' => 0,
+                'tc6' => 0,
+                'tc7' => 0,
+                'tc8' => 0
+            ];
+        }
+
+        return $data;
     }
 }

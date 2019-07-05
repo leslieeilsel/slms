@@ -2,39 +2,42 @@
   <div>
     <Card>
       <Row>
-      <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
-        <FormItem label="报表类型">
+        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+          <Form-item label="报表类型">
             <Select v-model="searchForm.report_type" style="width: 200px" @on-change="switchSearchForm">
-                <Option value="month">月报表</Option>
-                <Option value="day">日报表</Option>
+              <Option value="month">月报表</Option>
+              <Option value="day">日报表</Option>
             </Select>
-        </FormItem>
-        <span v-if="monthShow">
-        <Form-item label="开始时间" prop="startMonth">
-          <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px" :editable=false
-                      @on-change="startChange"></DatePicker>
-        </Form-item>
-        <Form-item label="结束时间" prop="endMonth">
-          <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px" :editable=false
-                      @on-change="endChange"></DatePicker>
-        </Form-item>
-        </span>
-        
-        <span v-if="dayShow">
-          <Form-item label="开始时间" prop="startMonth">
-            <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px" :editable=false
-                        @on-change="startChange"></DatePicker>
           </Form-item>
-          <Form-item label="结束时间" prop="endMonth">
-            <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px" :editable=false
-                        @on-change="endChange"></DatePicker>
+          <span v-if="reportType === 'month'">
+            <Form-item label="开始时间" prop="startMonth">
+              <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px"
+                          :editable=false @on-change="startChange"></DatePicker>
+            </Form-item>
+            <Form-item label="结束时间" prop="endMonth">
+              <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px"
+                          :editable=false @on-change="endChange"></DatePicker>
+            </Form-item>
+          </span>
+          <span v-if="reportType === 'day'">
+            <Form-item label="开始时间" prop="startMonth">
+              <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 200px"
+                          :editable=false
+                          @on-change="startChange"></DatePicker>
+            </Form-item>
+            <Form-item label="结束时间" prop="endMonth">
+              <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 200px"
+                          :editable=false
+                          @on-change="endChange"></DatePicker>
+            </Form-item>
+          </span>
+          <Form-item style="margin-left:-70px;">
+            <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
           </Form-item>
-        </span>
-        <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
           <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload">
             导出报表
           </Button>
-      </Form>
+        </Form>
       </Row>
       <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
              ref="table"></Table>
@@ -48,8 +51,7 @@
   export default {
     data() {
       return {
-        monthShow: true,
-        dayShow: false,
+        reportType: 'month',
         searchForm: {
           'report_type': 'month',
           'endMonth': '',
@@ -196,46 +198,76 @@
         this.disable = !(this.startValue && this.endValue);
       },
       filterData() {
-        const startArray = this.startValue.split('-');
-        const endArray = this.endValue.split('-');
-        if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
-          this.loading = true;
-          getOverviewMonthData(this.startValue, this.endValue, 'fxf').then(res => {
-            this.data = res.result;
-            this.baseUrl = res.baseUrl;
-            this.loading = false;
-            this.btnDisable = false;
-          }).catch(function () {
-            alert("出错了！");
-          });
-        } else {
-          if ((startArray[0] < endArray[0]) || (startArray[0] > endArray[0])) {
-            this.$Message.error({
-              content: '过滤时间不能跨年，请重新选择！',
-              closable: true
+        if (this.reportType === 'month') {
+          const startArray = this.startValue.split('-');
+          const endArray = this.endValue.split('-');
+          if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
+            this.loading = true;
+            getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'month').then(res => {
+              this.data = res.result;
+              console.log(this.data)
+              this.baseUrl = res.baseUrl;
+              this.loading = false;
+              this.btnDisable = false;
+            }).catch(function () {
+              alert("出错了！");
             });
+          } else {
+            if ((startArray[0] < endArray[0]) || (startArray[0] > endArray[0])) {
+              this.$Message.error({
+                content: '过滤时间不能跨年，请重新选择！',
+                closable: true
+              });
+            }
+            if (endArray[1] < startArray[1]) {
+              this.$Message.error({
+                content: '开始月份不能大于结束月份，请重新选择！',
+                closable: true
+              });
+            }
           }
-          if (endArray[1] < startArray[1]) {
-            this.$Message.error({
-              content: '开始月份不能大于结束月份，请重新选择！',
-              closable: true
+        } else {
+          const startArray = this.startValue.split('-');
+          const endArray = this.endValue.split('-');
+          if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
+            this.loading = true;
+            getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'day').then(res => {
+              this.data = res.result;
+              this.baseUrl = res.baseUrl;
+              this.loading = false;
+              this.btnDisable = false;
+            }).catch(function () {
+              alert("出错了！");
             });
+          } else {
+            if ((startArray[0] < endArray[0]) || (startArray[0] > endArray[0])) {
+              this.$Message.error({
+                content: '过滤时间不能跨年，请重新选择！',
+                closable: true
+              });
+            }
+            if (endArray[1] < startArray[1]) {
+              this.$Message.error({
+                content: '开始月份不能大于结束月份，请重新选择！',
+                closable: true
+              });
+            }
+            if (endArray[2] < startArray[2]) {
+              this.$Message.error({
+                content: '开始日期不能大于结束日期，请重新选择！',
+                closable: true
+              });
+            }
           }
         }
       },
       exportData() {
-        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf';
+        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf' + '/' + this.reportType;
       },
       switchSearchForm(e) {
-        if (e === 'day') {
-          this.dayShow = true;
-          this.monthShow = false;
-        } else {
-          this.dayShow = false;
-          this.monthShow = true;
-        }
-        this.searchForm.startMonth = this.searchForm.endMonth = this.startValue = this.endValue= '';
-        this.disable = true;
+        this.reportType = e;
+        this.searchForm.startMonth = this.searchForm.endMonth = this.startValue = this.endValue = '';
+        this.disable = this.btnDisable = true;
       }
     }
   }

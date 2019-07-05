@@ -33,3 +33,7 @@
 .exportReport {
     float: right;
 }
+
+.ivu-select .ivu-select-dropdown ul {
+    margin-bottom: 0;
+}

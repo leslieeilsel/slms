@@ -31,15 +31,17 @@ class ApiController extends Controller
      * @param string $startMonth
      * @param string $endMonth
      * @param string $reportType
+     * @param string $range
      * @return void
      * @throws Exception
      */
-    public function exportOverviewMonthData($startMonth, $endMonth, $reportType)
+    public function exportOverviewMonthData($startMonth, $endMonth, $reportType, $range)
     {
         $params = [
             'startMonth' => $startMonth,
             'endMonth' => $endMonth,
-            'reportType' => $reportType
+            'reportType' => $reportType,
+            'range' => $range
         ];
         $report = new FeeOverviewMonthReport();
         $data = $report->export($params);
