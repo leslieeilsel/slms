@@ -227,6 +227,7 @@
                 closable: true
               });
             }
+            this.btnDisable = true;
           }
         } else {
           const startArray = this.startValue.split('-');
@@ -260,6 +261,7 @@
                 closable: true
               });
             }
+            this.btnDisable = true;
           }
         }
       },
