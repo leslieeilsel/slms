@@ -204,8 +204,9 @@
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
             this.loading = true;
             getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'month').then(res => {
+              this.columns[1].title = '月体育彩票销量';
+              this.columns[2].title = '月分配彩票发行费';
               this.data = res.result;
-              console.log(this.data)
               this.baseUrl = res.baseUrl;
               this.loading = false;
               this.btnDisable = false;
@@ -232,6 +233,8 @@
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
             this.loading = true;
             getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'day').then(res => {
+              this.columns[1].title = '日体育彩票销量';
+              this.columns[2].title = '日分配彩票发行费';
               this.data = res.result;
               this.baseUrl = res.baseUrl;
               this.loading = false;
@@ -245,14 +248,12 @@
                 content: '过滤时间不能跨年，请重新选择！',
                 closable: true
               });
-            }
-            if (endArray[1] < startArray[1]) {
+            } else if (endArray[1] < startArray[1]) {
               this.$Message.error({
                 content: '开始月份不能大于结束月份，请重新选择！',
                 closable: true
               });
-            }
-            if (endArray[2] < startArray[2]) {
+            } else if (endArray[2] < startArray[2]) {
               this.$Message.error({
                 content: '开始日期不能大于结束日期，请重新选择！',
                 closable: true

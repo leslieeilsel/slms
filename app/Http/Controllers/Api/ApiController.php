@@ -41,7 +41,7 @@ class ApiController extends Controller
             'startMonth' => $startMonth,
             'endMonth' => $endMonth,
             'reportType' => $reportType,
-            'range' => $range
+            'range' => $range,
         ];
         $report = new FeeOverviewMonthReport();
         $data = $report->export($params);

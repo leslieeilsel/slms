@@ -15,8 +15,8 @@ class PublicReportRepository
     /**
      * 获取指定日期段内每一天的日期
      *
-     * @param  string $startDate 开始日期
-     * @param  string $endDate 结束日期
+     * @param string $startDate 开始日期
+     * @param string $endDate 结束日期
      * @return array
      */
     public function getDateFromRange($startDate, $endDate)
@@ -40,12 +40,30 @@ class PublicReportRepository
     /**
      * 组织xx年数据
      *
-     * @param array $data
+     * @param array  $data
+     * @param string $dataYear
      * @return array
      */
-    public function dataByYear($data)
+    public function dataByYear($data, $dataYear)
     {
         $year = [];
+        $region = ['西安', '杨凌', '咸阳', '渭南', '宝鸡', '铜川', '商洛', '安康', '汉中', '延安', '榆林', '韩城'];
+        $dataRegion = $data->pluck('region_name')->toArray();
+        $diffRegion = array_diff($region, $dataRegion);
+        $data = $data->all();
+        foreach ($diffRegion as $k => $v) {
+            array_splice($data, $k, 0, [[
+                'region_name' => $v,
+                'year' => $dataYear,
+                'tc1' => 0,
+                'tc2' => 0,
+                'tc3' => 0,
+                'tc4' => 0,
+                'tc5' => 0,
+                'tc6' => 0,
+                'tc7' => 0,
+            ]]);
+        }
         foreach ($data as $dk => $dv) {
             array_splice($dv, 0, 1, $dv['region_name']);
             array_splice($dv, 1, 1);
@@ -103,7 +121,7 @@ class PublicReportRepository
                 'tc5' => 0,
                 'tc6' => 0,
                 'tc7' => 0,
-                'tc8' => 0
+                'tc8' => 0,
             ];
         }
 
@@ -114,8 +132,8 @@ class PublicReportRepository
     /**
      * 求增幅
      *
-     * @param array $this_year
-     * @param array $last_year
+     * @param array  $this_year
+     * @param array  $last_year
      * @param string $action
      * @return array
      */
@@ -165,5 +183,27 @@ class PublicReportRepository
         array_splice($order, 0, 0, '0');
 
         return $order;
+    }
+
+    /**
+     * 获取两个日期之间的所有日期
+     *
+     * @param $start
+     * @param $end
+     * @return array
+     */
+    public function getDay($start, $end)
+    {
+        $dt_start = strtotime($start);
+        $dt_end = strtotime($end);
+
+        $day[] = date('Y-m-d', $dt_start);
+
+        while ($dt_start < $dt_end) {
+            $dt_start = strtotime('+1 day', $dt_start);
+            $day[] = date('Y-m-d', $dt_start);
+        }
+
+        return $day;
     }
 }
