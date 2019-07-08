@@ -73,5 +73,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('overviewmonth', 'Api\ApiController@getOverviewMonthData');
     Route::get('exportoverviewmonth/{startMonth}/{endMonth}/{type}/{range}', 'Api\ApiController@exportOverviewMonthData');
+
+    Route::post('cpRegion', 'Api\ApiController@getCpRegionData');
+    Route::get('exportCpRegion/{startMonth}/{endMonth}/{range}', 'Api\ApiController@exportCpRegion');
 });
 

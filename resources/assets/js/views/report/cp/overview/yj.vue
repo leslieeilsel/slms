@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-  import {getOverviewMonthData} from '../../../../../api/report';
+  import {getOverviewMonthData} from '../../../../api/report';
   import './table.css';
 
   export default {

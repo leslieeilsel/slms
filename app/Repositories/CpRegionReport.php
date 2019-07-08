@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class FeeOverviewMonthReport
+class CpRegionReport
 {
     public $choose_year;
     public $last_year;
@@ -24,7 +24,7 @@ class FeeOverviewMonthReport
      */
     public function export($params)
     {
-        $data = $this->getOverviewMonthData($params, 'export');
+        $data = $this->getRegionReportData($params, 'export');
         $startMonth = str_replace('-', '.', $params['startMonth']);
         $endMonth = str_replace('-', '.', $params['endMonth']);
         $range = $params['range'] === 'month' ? '月' : '日';
@@ -40,12 +40,10 @@ class FeeOverviewMonthReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', $startMonth . '-' . $endMonth . '发行费分配概览（' . $range . '报）')
+            ->setCellValue('A1', $startMonth . '-' . $endMonth . '区域销量统计（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '市区')
             ->setCellValue('B3', '' . $range . '体育彩票销量')
-            ->setCellValue('J3', '' . $range . '分配体彩发行费')
-            ->setCellValue('Q3', '发行费合计')
             ->setCellValue('B4', '概率游戏')
             ->setCellValue('C4', '大乐透')
             ->setCellValue('D4', '排三')
@@ -53,22 +51,13 @@ class FeeOverviewMonthReport
             ->setCellValue('F4', '竞彩')
             ->setCellValue('G4', '足彩')
             ->setCellValue('H4', '即开型')
-            ->setCellValue('I4', '总销量')
-            ->setCellValue('J4', '概率游戏')
-            ->setCellValue('K4', '大乐透')
-            ->setCellValue('L4', '排三')
-            ->setCellValue('M4', '11选5')
-            ->setCellValue('N4', '竞彩')
-            ->setCellValue('O4', '足彩')
-            ->setCellValue('P4', '即开型');
+            ->setCellValue('I4', '总销量');
         // 合并行、列
         $spreadsheet->getActiveSheet()
-            ->mergeCells('A1:Q1')
-            ->mergeCells('A2:P2')
+            ->mergeCells('A1:I1')
+            ->mergeCells('A2:H2')
             ->mergeCells('A3:A4')
-            ->mergeCells('B3:I3')
-            ->mergeCells('J3:P3')
-            ->mergeCells('Q3:Q4');
+            ->mergeCells('B3:I3');
         // 添加动态数据
         $spreadsheet->getActiveSheet()
             ->fromArray(
@@ -87,14 +76,6 @@ class FeeOverviewMonthReport
         $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('J')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('K')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('L')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('M')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('N')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('O')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('P')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('Q')->setWidth(16);
         // 设置高度
         $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(25);
         // 设置字体大小
@@ -107,7 +88,7 @@ class FeeOverviewMonthReport
             ],
         ];
         $spreadsheet->getActiveSheet()->getStyle('A2')->applyFromArray($numberStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B5:Q20')->applyFromArray($numberStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B5:I20')->applyFromArray($numberStyleArray);
         $centerStyleArray = [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -116,7 +97,7 @@ class FeeOverviewMonthReport
         ];
         $spreadsheet->getActiveSheet()->getStyle('A1')->applyFromArray($centerStyleArray);
         $spreadsheet->getActiveSheet()->getStyle('A3:A20')->applyFromArray($centerStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B3:Q4')->applyFromArray($centerStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B3:I4')->applyFromArray($centerStyleArray);
         // 设置边框
         $allBordersStyleArray = [
             'borders' => [
@@ -125,8 +106,8 @@ class FeeOverviewMonthReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A1:Q1')->applyFromArray($allBordersStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('A3:Q20')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A1:I1')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A3:I20')->applyFromArray($allBordersStyleArray);
         $outlineBordersStyleArray = [
             'borders' => [
                 'outline' => [
@@ -134,10 +115,10 @@ class FeeOverviewMonthReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A2:Q2')->applyFromArray($outlineBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A2:I2')->applyFromArray($outlineBordersStyleArray);
         // 设置千分位
-        $spreadsheet->getActiveSheet()->getStyle('B5:Q18')->getNumberFormat()->setFormatCode('#,##0.00');
-        $spreadsheet->getActiveSheet()->getStyle('B19:Q19')->getNumberFormat()->setFormatCode('0.0%');
+        $spreadsheet->getActiveSheet()->getStyle('B5:I18')->getNumberFormat()->setFormatCode('#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('B19:I19')->getNumberFormat()->setFormatCode('0.0%');
         // 重命名 worksheet
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
@@ -145,7 +126,7 @@ class FeeOverviewMonthReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="发行费分配概览-' . $range . '报.xlsx"');
+        header('Content-Disposition: attachment;filename="区域销量统计-' . $range . '报.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');
@@ -168,27 +149,9 @@ class FeeOverviewMonthReport
      * @param string $action
      * @return array
      */
-    public function getOverviewMonthData($params, $action)
+    public function getRegionReportData($params, $action)
     {
-        $body = [];
-        $reportType = $params['reportType'];
-        unset($params['reportType']);
-        $date = $params;
-
-        switch ($reportType) {
-            case 'fxf':
-                $body = $this->getFxfOverviewMonthData($date, $action);
-                break;
-            case 'gyj':
-                $body = $this->getGyjOverviewMonthData($date, $action);
-                break;
-            case 'yj':
-                $body = $this->getYjOverviewMonthData($date, $action);
-                break;
-            case 'fj':
-                $body = $this->getFjOverviewMonthData($date, $action);
-                break;
-        }
+        $body = $this->getData($params, $action);
 
         return $body;
     }
@@ -200,119 +163,20 @@ class FeeOverviewMonthReport
      * @param string $action
      * @return array
      */
-    public function getFxfOverviewMonthData($date, $action)
+    public function getData($date, $action)
     {
-        $fee = ['0.04', '0.04', '0.04', '0.03', '0.005', '0.03', '0.015'];
-        $body = $this->getMonthFeeData($date, $fee, $action);
+        $body = $this->toGetData($date, $action);
         $body = $this->bodyFormat($body, $action);
 
         return $body;
     }
 
     /**
-     * 公益金分配概览表
-     *
      * @param array  $date
      * @param string $action
      * @return array
      */
-    public function getGyjOverviewMonthData($date, $action)
-    {
-        $fee = ['0.0925', '0.09', '0.085', '0.07', '0.045', '0.055', '0.05'];
-        $body = $this->getMonthFeeData($date, $fee, $action);
-        $body = $this->bodyFormat($body, $action);
-
-        return $body;
-    }
-
-    /**
-     * 佣金分配概览表
-     *
-     * @param array  $date
-     * @param string $action
-     * @return array
-     */
-    public function getYjOverviewMonthData($date, $action)
-    {
-        $fee = ['0.08', '0.08', '0.08', '0.08', '0.08', '0.08', '0.1'];
-        $body = $this->getMonthFeeData($date, $fee, $action);
-        $body = $this->bodyFormat($body, $action);
-
-        return $body;
-    }
-
-    /**
-     * 返奖分配概览表
-     *
-     * @param array  $date
-     * @param string $action
-     * @return array
-     */
-    public function getFjOverviewMonthData($date, $action)
-    {
-        $fee = ['0.5', '0.51', '0.53', '0.59', '0.73', '0.65', '0.65'];
-        $body = $this->getMonthFeeData($date, $fee, $action);
-        $body = $this->bodyFormat($body, $action);
-
-        return $body;
-    }
-
-    /**
-     * 组织报表体数据
-     *
-     * @param array  $date
-     * @param array  $fee
-     * @param string $action
-     * @return array
-     */
-    protected function getMonthFeeData($date, $fee, $action)
-    {
-        $body = [];
-        $jin = [];
-        $jinPer = [];
-        $sale_jin = [];
-        $sale = $this->getFeeMonthReportData($date, $action);
-        //对应费率
-        if (!empty($sale)) {
-            foreach ($sale as $sk => $sv) {
-                $temp = $sale[$sk];
-                array_splice($sv, 0, 1);//删除地区
-                array_splice($sv, -1, 1);//删除总量行
-                if ($sk == 14 || $sk == 15) {
-                    $jin[$sk] = $temp;
-                    array_splice($jin[$sk], 0, 1);//增幅和排名行保持不变
-                    $k = 0;//费率下标
-                    foreach ($jin[$sk] as $jk => $jv) {
-                        $sale[$sk]["fee" . $k] = $jv;
-                        $k++;
-                    }
-                    $sale_jin[$sk] = $sale[$sk];
-                } else {
-                    $k = 0;//费率下标
-                    foreach ($sv as $svk => $svv) {
-                        $jinPer["fee" . $k] = $svv * $fee[$k];//其余行 销量*费率
-                        $k++;
-                    }
-                    $jinPerCount = array_sum($jinPer);
-                    $jinPer["fee" . $k] = $jinPerCount;
-                    $jin[$sk] = $jinPer;
-                    $sale_jin[$sk] = array_merge($sale[$sk], $jin[$sk]);
-                }
-                //合并销量和公益金
-                $jinPer = [];
-            }
-            $body = $sale_jin;
-        }
-
-        return $body;
-    }
-
-    /**
-     * @param array  $date
-     * @param string $action
-     * @return array
-     */
-    public function getFeeMonthReportData($date, $action)
+    public function toGetData($date, $action)
     {
         $startDate = explode('-', $date['startMonth']);
         $endDate = explode('-', $date['endMonth']);

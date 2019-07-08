@@ -35,7 +35,7 @@
             <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
           </Form-item>
           <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
-          style="margin-right: 10px">
+                  style="margin-right: 10px">
             导出报表
           </Button>
         </Form>
@@ -46,7 +46,7 @@
   </div>
 </template>
 <script>
-  import {getOverviewMonthData} from '../../../../../api/report';
+  import {getOverviewMonthData} from '../../../../api/report';
   import './table.css';
 
   export default {
@@ -125,7 +125,7 @@
             ]
           },
           {
-            title: '月分配彩票发行费',
+            title: '月分配彩票返奖',
             align: 'center',
             children: [
               {
@@ -173,7 +173,7 @@
             ]
           },
           {
-            title: '发行费合计',
+            title: '返奖合计',
             key: 'fee7',
             align: 'right',
             width: 120,
@@ -204,9 +204,9 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
             this.loading = true;
-            getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'month').then(res => {
+            getOverviewMonthData(this.startValue, this.endValue, 'fj', 'month').then(res => {
               this.columns[1].title = '月体育彩票销量';
-              this.columns[2].title = '月分配彩票发行费';
+              this.columns[2].title = '月分配彩票返奖';
               this.data = res.result;
               this.baseUrl = res.baseUrl;
               this.loading = false;
@@ -234,9 +234,9 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
             this.loading = true;
-            getOverviewMonthData(this.startValue, this.endValue, 'fxf', 'day').then(res => {
+            getOverviewMonthData(this.startValue, this.endValue, 'fj', 'day').then(res => {
               this.columns[1].title = '日体育彩票销量';
-              this.columns[2].title = '日分配彩票发行费';
+              this.columns[2].title = '日分配彩票返奖';
               this.data = res.result;
               this.baseUrl = res.baseUrl;
               this.loading = false;
@@ -266,7 +266,7 @@
         }
       },
       exportData() {
-        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf' + '/' + this.reportType;
+        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fj' + '/' + this.reportType;
       },
       switchSearchForm(e) {
         this.reportType = e;

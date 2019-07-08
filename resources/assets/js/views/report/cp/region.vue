@@ -46,8 +46,8 @@
   </div>
 </template>
 <script>
-  import {getOverviewMonthData} from '../../../../../api/report';
-  import './table.css';
+  import {getCpRegionData} from '../../../api/report';
+  import './overview/table.css';
 
   export default {
     data() {
@@ -78,106 +78,43 @@
                 title: '概率游戏',
                 key: 'tc1',
                 align: 'right',
-                width: 100
               },
               {
                 title: '大乐透',
                 key: 'tc2',
                 align: 'right',
-                width: 100
               },
               {
                 title: '排三',
                 key: 'tc3',
                 align: 'right',
-                width: 100
               },
               {
                 title: '11选5',
                 key: 'tc4',
                 align: 'right',
-                width: 100
               },
               {
                 title: '竞彩',
                 key: 'tc5',
                 align: 'right',
-                width: 120
               },
               {
                 title: '足彩',
                 key: 'tc6',
                 align: 'right',
-                width: 100
               },
               {
                 title: '即开型',
                 key: 'tc7',
                 align: 'right',
-                width: 100
               },
               {
                 title: '总销量',
                 key: 'tc8',
                 align: 'right',
-                width: 120
               }
             ]
-          },
-          {
-            title: '月分配彩票公益金',
-            align: 'center',
-            children: [
-              {
-                title: '概率游戏',
-                key: 'fee0',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '大乐透',
-                key: 'fee1',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '排三',
-                key: 'fee2',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '11选5',
-                key: 'fee3',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '竞彩',
-                key: 'fee4',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '足彩',
-                key: 'fee5',
-                align: 'right',
-                width: 100
-              },
-              {
-                title: '即开型',
-                key: 'fee6',
-                align: 'right',
-                width: 100
-              }
-            ]
-          },
-          {
-            title: '公益金合计',
-            key: 'fee7',
-            align: 'right',
-            width: 120,
-            fixed: 'right'
           }
         ],
         data: [],
@@ -204,9 +141,8 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
             this.loading = true;
-            getOverviewMonthData(this.startValue, this.endValue, 'gyj', 'month').then(res => {
+            getCpRegionData(this.startValue, this.endValue, 'month').then(res => {
               this.columns[1].title = '月体育彩票销量';
-              this.columns[2].title = '月分配彩票公益金';
               this.data = res.result;
               this.baseUrl = res.baseUrl;
               this.loading = false;
@@ -234,9 +170,8 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
             this.loading = true;
-            getOverviewMonthData(this.startValue, this.endValue, 'gyj', 'day').then(res => {
+            getCpRegionData(this.startValue, this.endValue, 'day').then(res => {
               this.columns[1].title = '日体育彩票销量';
-              this.columns[2].title = '日分配彩票公益金';
               this.data = res.result;
               this.baseUrl = res.baseUrl;
               this.loading = false;
@@ -266,7 +201,7 @@
         }
       },
       exportData() {
-        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'gyj' + '/' + this.reportType;
+        window.location.href = this.baseUrl + '/api/exportCpRegion/' + this.startValue + '/' + this.endValue + '/' + this.reportType;
       },
       switchSearchForm(e) {
         this.reportType = e;
