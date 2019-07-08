@@ -37,3 +37,9 @@
 .ivu-select .ivu-select-dropdown ul {
     margin-bottom: 0;
 }
+
+.filter {
+    padding-top: 20px;
+    background: #f8f8f9;
+    border-top: 1px solid #dcdee2;
+}
