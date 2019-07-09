@@ -54,9 +54,9 @@
       return {
         reportType: 'month',
         searchForm: {
-          'report_type': 'month',
-          'endMonth': '',
-          'startMonth': '',
+          report_type: 'month',
+          endMonth: '',
+          startMonth: '',
         },
         btnDisable: true,
         disable: true,

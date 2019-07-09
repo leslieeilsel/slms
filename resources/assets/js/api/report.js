@@ -41,3 +41,16 @@ export function getCpRegionData(startMonth, endMonth, range) {
     }
   })
 }
+
+/**
+ * 玩法销量统计
+ *
+ * @returns {*}
+ */
+export function getCpGameData(form) {
+  return request({
+    url: '/api/cpGame',
+    method: 'post',
+    data: {...form}
+  })
+}

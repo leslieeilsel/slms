@@ -76,5 +76,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('cpRegion', 'Api\ApiController@getCpRegionData');
     Route::get('exportCpRegion/{startMonth}/{endMonth}/{range}', 'Api\ApiController@exportCpRegion');
+
+    Route::post('cpGame', 'Api\ApiController@getCpGameData');
+    Route::get('exportCpGame/{startMonth}/{endMonth}/{range}/{gameType}/{gameName?}', 'Api\ApiController@exportCpGame');
 });
 
