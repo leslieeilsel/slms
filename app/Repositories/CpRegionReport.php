@@ -78,8 +78,6 @@ class CpRegionReport
         $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(16);
         // 设置高度
         $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(25);
-        // 设置字体大小
-        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
         // 设置对齐方式
         $numberStyleArray = [
             'alignment' => [
@@ -123,6 +121,8 @@ class CpRegionReport
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
         $spreadsheet->setActiveSheetIndex(0);
+        // 设置字体大小
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

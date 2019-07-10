@@ -35,7 +35,7 @@
             <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
           </Form-item>
           <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
-          style="margin-right: 10px">
+                  style="margin-right: 10px">
             导出报表
           </Button>
         </Form>

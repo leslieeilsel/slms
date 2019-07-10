@@ -67,7 +67,7 @@ class PublicReportRepository
         foreach ($data as $dk => $dv) {
             array_splice($dv, 0, 1, $dv['region_name']);
             array_splice($dv, 1, 1);
-            $dv['tc8'] = $dv['tc1'] + $dv['tc2'] + $dv['tc3'] + $dv['tc4'] + $dv['tc5'] + $dv['tc6'] + $dv['tc7'];
+            $dv['tc8'] = number_format($dv['tc1'] + $dv['tc2'] + $dv['tc3'] + $dv['tc4'] + $dv['tc5'] + $dv['tc6'] + $dv['tc7'], 2, '.', '');
             $year[] = $dv;
         }
 

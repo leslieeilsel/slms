@@ -191,7 +191,7 @@
         this.disable = this.btnDisable = true;
       },
       exportData() {
-        window.location.href = 'http://' + this.host + '/api/exportCpGame/' + this.startValue + '/' + this.endValue + '/' + this.reportType+ '/' + this.searchForm.gameType + '/' + this.searchForm.gameName;
+        window.location.href = 'http://' + this.host + '/api/exportCpGame/' + this.startValue + '/' + this.endValue + '/' + this.reportType + '/' + this.searchForm.gameType + '/' + this.searchForm.gameName;
       },
       filterData() {
         if (this.reportType === 'month') {

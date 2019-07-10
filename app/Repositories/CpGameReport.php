@@ -88,8 +88,6 @@ class CpGameReport
         $spreadsheet->getActiveSheet()->getColumnDimension('O')->setWidth(16);
         // 设置高度
         $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(25);
-        // 设置字体大小
-        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
         // 设置对齐方式
         $numberStyleArray = [
             'alignment' => [
@@ -132,6 +130,8 @@ class CpGameReport
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
         $spreadsheet->setActiveSheetIndex(0);
+        // 设置字体大小
+        $spreadsheet->getActiveSheet()->getStyle('A1')->getFont()->setSize(20);
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -174,7 +174,7 @@ class CpGameReport
      */
     public function getData($date, $action)
     {
-        $body = $this->toGetData($date, $action);
+        $body = $this->toGetData($date);
         $body = $this->bodyFormat($body, $action);
 
         return $body;
@@ -187,9 +187,6 @@ class CpGameReport
      */
     public function toGetData($date)
     {
-        $startDate = explode('-', $date['startMonth']);
-        $endDate = explode('-', $date['endMonth']);
-
         $table = $date['range'] === 'month' ? 'slms_sum_m_cp_region' : 'slms_sum_d_cp_region';
 
         $query = DB::table($table)
@@ -208,11 +205,9 @@ class CpGameReport
                 DB::raw("SUM(case when region_num = 6124 then sale_amt else 0 end ) as yanan"),
                 DB::raw("SUM(case when region_num = 6127 then sale_amt else 0 end ) as yulin"),
                 DB::raw("SUM(case when region_num = 6130 then sale_amt else 0 end ) as hancheng"));
-        if ($date['range'] === 'month') {
-            $query->whereIn('date', $this->buildMonthList($startDate, $endDate));
-        } else {
-            $query->whereBetween('date', [$date['startMonth'], $date['endMonth']]);
-        }
+
+        $query->whereBetween('date', [$date['startMonth'], $date['endMonth']]);
+
         if (isset($date['gameType']) && $date['gameType'] != '-1') {
             $query = $query->where('game.type', $date['gameType']);
         }
@@ -267,7 +262,7 @@ class CpGameReport
     /**
      * 组织xx年数据
      *
-     * @param array  $data
+     * @param array $data
      * @return array
      */
     public function addGameTotal($data)
@@ -276,7 +271,7 @@ class CpGameReport
         foreach ($data as $dk => $dv) {
             $temp['num'] = $dk + 1;
             $this->array_insert($dv, 0, $temp);
-            $dv['game_total'] = $dv['xian'] + $dv['yangling'] + $dv['xianyang'] + $dv['weinan'] + $dv['baoji'] + $dv['tongchuan'] + $dv['shangluo'] + $dv['ankang'] + $dv['hanzhong'] + $dv['yanan'] + $dv['yulin'] + $dv['hancheng'];
+            $dv['game_total'] = number_format($dv['xian'] + $dv['yangling'] + $dv['xianyang'] + $dv['weinan'] + $dv['baoji'] + $dv['tongchuan'] + $dv['shangluo'] + $dv['ankang'] + $dv['hanzhong'] + $dv['yanan'] + $dv['yulin'] + $dv['hancheng'], 2, '.', '');;
             $year[] = $dv;
         }
 
@@ -300,13 +295,13 @@ class CpGameReport
             'yanan' => array_sum(array_column($data, 'yanan')),
             'yulin' => array_sum(array_column($data, 'yulin')),
             'hancheng' => array_sum(array_column($data, 'hancheng')),
-            'game_total' => array_sum(array_column($data, 'game_total'))
+            'game_total' => array_sum(array_column($data, 'game_total')),
         ];
     }
 
     public function array_insert(&$array, $position, $insert_array)
     {
-        $first_array = array_splice ($array, 0, $position);
-        $array = array_merge ($first_array, $insert_array, $array);
+        $first_array = array_splice($array, 0, $position);
+        $array = array_merge($first_array, $insert_array, $array);
     }
 }
