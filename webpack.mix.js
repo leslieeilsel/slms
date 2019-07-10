@@ -10,7 +10,6 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 mix.js('resources/assets/js/app.js', 'public/js')
   .extract(['vue', 'vue-router', 'axios', 'iview'])
@@ -30,9 +29,6 @@ mix.js('resources/assets/js/app.js', 'public/js')
         'router': path.resolve(__dirname, 'resources/assets/js/router'),
       }
     },
-    // plugins: [
-    //   new BundleAnalyzerPlugin()
-    // ]
   });
 
 if (mix.inProduction()) {
