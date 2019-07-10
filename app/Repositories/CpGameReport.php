@@ -193,7 +193,7 @@ class CpGameReport
         $table = $date['range'] === 'month' ? 'slms_sum_m_cp_region' : 'slms_sum_d_cp_region';
 
         $query = DB::table($table)
-            ->join('ibiart_slms_game as game', 'game.cnum', '=', 'game_id')
+            ->join('ibiart_slms_game as game', 'game.id', '=', 'game_id')
             ->select(
                 'game.name as game_name',
                 DB::raw("SUM(case when region_num = 6101 then sale_amt else 0 end ) as xian"),

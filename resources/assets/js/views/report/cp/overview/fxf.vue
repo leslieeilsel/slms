@@ -150,7 +150,7 @@
                 title: '11选5',
                 key: 'fee3',
                 align: 'right',
-                width: 100
+                width: 110
               },
               {
                 title: '竞彩',

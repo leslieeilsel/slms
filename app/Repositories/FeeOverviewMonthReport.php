@@ -324,7 +324,7 @@ class FeeOverviewMonthReport
         $publicFun = new PublicReportRepository();
 
         $query = DB::table($table)
-            ->join('ibiart_slms_game as game', 'game.cnum', '=', 'game_id')
+            ->join('ibiart_slms_game as game', 'game.id', '=', 'game_id')
             ->select(
                 DB::raw("replace(region_name,' ','') as region_name"),
                 DB::raw("left(date, 4) as year"),

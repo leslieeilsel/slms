@@ -91,7 +91,7 @@
             title: '西安',
             key: 'xian',
             align: 'right',
-            width: 110,
+            width: 100,
           },
           {
             title: '杨凌',

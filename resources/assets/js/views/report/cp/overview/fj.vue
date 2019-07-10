@@ -96,7 +96,7 @@
                 title: '11选5',
                 key: 'tc4',
                 align: 'right',
-                width: 100
+                width: 110
               },
               {
                 title: '竞彩',
