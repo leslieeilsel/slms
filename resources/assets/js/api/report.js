@@ -54,3 +54,16 @@ export function getCpGameData(form) {
     data: {...form}
   })
 }
+
+/**
+ * 门店销量统计
+ *
+ * @returns {*}
+ */
+export function getCpStoreData(form) {
+  return request({
+    url: '/api/cpStore',
+    method: 'post',
+    data: {...form}
+  })
+}

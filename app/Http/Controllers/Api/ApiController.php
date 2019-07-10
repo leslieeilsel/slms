@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\CpRegionReport;
 use App\Repositories\CpGameReport;
+use App\Repositories\CpStoreReport;
 use App\Repositories\FeeOverviewMonthReport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -120,6 +121,45 @@ class ApiController extends Controller
             'gameName' => $gameName,
         ];
         $report = new CpGameReport();
+        $data = $report->export($params);
+    }
+
+    /**
+     * 彩票年门店销量数据
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getCpStoreData(Request $request)
+    {
+        $param = $request->input();
+        $report = new CpStoreReport();
+        $data = $report->getStoreReportData($param, 'page');
+
+        return response()->json(['result' => $data], 200);
+    }
+
+    /**
+     * 导出彩票年玩法销量统计
+     *
+     * @param string $startMonth
+     * @param string $endMonth
+     * @param string $range
+     * @param number $gameType
+     * @param string $gameName
+     * @return void
+     * @throws Exception
+     */
+    public function exportCpStore($startMonth, $endMonth, $range, $gameType, $gameName = '')
+    {
+        $params = [
+            'startMonth' => $startMonth,
+            'endMonth' => $endMonth,
+            'range' => $range,
+            'gameType' => $gameType,
+            'gameName' => $gameName,
+        ];
+        $report = new CpStoreReport();
         $data = $report->export($params);
     }
 }

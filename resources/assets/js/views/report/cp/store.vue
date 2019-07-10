@@ -30,17 +30,28 @@
                           @on-change="endChange"></DatePicker>
             </Form-item>
           </span>
-        <Form-item label="游戏类型" prop="gameType">
-          <Select v-model="searchForm.gameType" style="width:150px">
+        <Form-item label="归属地市" prop="region">
+          <Select v-model="searchForm.region" style="width:150px">
             <Option value="-1">全部</Option>
-            <Option value="1">电彩</Option>
-            <Option value="2">竞彩</Option>
-            <Option value="0">即开</Option>
+            <Option value="6101">西安</Option>
+            <Option value="6106">杨凌</Option>
+            <Option value="6107">咸阳</Option>
+            <Option value="6110">渭南</Option>
+            <Option value="6113">宝鸡</Option>
+            <Option value="6116">铜川</Option>
+            <Option value="6117">商洛</Option>
+            <Option value="6119">安康</Option>
+            <Option value="6121">汉中</Option>
+            <Option value="6124">延安</Option>
+            <Option value="6127">榆林</Option>
+            <Option value="6130">韩城</Option>
           </Select>
         </Form-item>
-        <Form-item label="游戏名称" prop="gameName">
-          <Input v-model="searchForm.gameName" placeholder="支持迷糊搜索" style="width:150px"></Input>
-        </Form-item>
+        <!--        <Form-item label="投注站" prop="store">-->
+        <!--          <Select v-model="searchForm.store" style="width:150px">-->
+        <!--            <Option value="-1">全部</Option>-->
+        <!--          </Select>-->
+        <!--        </Form-item>-->
         <Form-item style="margin-left:-70px;">
           <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
         </Form-item>
@@ -55,7 +66,7 @@
 </template>
 <script>
   import './overview/table.css';
-  import {getCpGameData} from '../../../api/report';
+  import {getCpStoreData} from '../../../api/report';
 
   export default {
     data() {
@@ -65,8 +76,8 @@
           report_type: 'month',
           endMonth: '',
           startMonth: '',
-          gameType: '-1',
-          gameName: '',
+          region: '-1',
+          store: '-1',
         },
         btnDisable: true,
         disable: true,
@@ -74,97 +85,52 @@
         host: window.document.location.host,
         columns: [
           {
-            title: '序号',
-            key: 'num',
-            width: 70,
+            title: '投注站',
+            key: 'store_num',
+            width: 120,
             fixed: 'left',
             align: 'center',
           },
           {
-            title: '游戏名称',
-            key: 'game_name',
-            width: 150,
-            fixed: 'left',
-            align: 'left',
-          },
-          {
-            title: '西安',
-            key: 'xian',
+            title: '概率游戏',
+            key: 'sale_gl',
             align: 'right',
-            width: 100,
           },
           {
-            title: '杨凌',
-            key: 'yangling',
+            title: '大乐透',
+            key: 'sale_dlt',
             align: 'right',
-            width: 100,
           },
           {
-            title: '咸阳',
-            key: 'xianyang',
+            title: '排三',
+            key: 'sale_pl',
             align: 'right',
-            width: 100,
           },
           {
-            title: '渭南',
-            key: 'weinan',
+            title: '11选5',
+            key: 'sale_xuan',
             align: 'right',
-            width: 100,
           },
           {
-            title: '宝鸡',
-            key: 'baoji',
+            title: '竞彩',
+            key: 'sale_jc',
             align: 'right',
-            width: 100,
           },
           {
-            title: '铜川',
-            key: 'tongchuan',
+            title: '足彩',
+            key: 'sale_zc',
             align: 'right',
-            width: 100,
           },
           {
-            title: '商洛',
-            key: 'shangluo',
+            title: '即开型',
+            key: 'sale_jk',
             align: 'right',
-            width: 100,
           },
           {
-            title: '安康',
-            key: 'ankang',
-            align: 'right',
-            width: 100,
-          },
-          {
-            title: '汉中',
-            key: 'hanzhong',
-            align: 'right',
-            width: 100,
-          },
-          {
-            title: '延安',
-            key: 'yanan',
-            align: 'right',
-            width: 100,
-          },
-          {
-            title: '榆林',
-            key: 'yulin',
-            align: 'right',
-            width: 100,
-          },
-          {
-            title: '韩城',
-            key: 'hancheng',
-            align: 'right',
-            width: 100,
-          },
-          {
-            title: '合计',
-            key: 'game_total',
+            title: '总销量',
+            key: 'sale_total',
             align: 'right',
             fixed: 'right',
-            width: 120,
           }
         ],
         data: [],
@@ -191,7 +157,7 @@
         this.disable = this.btnDisable = true;
       },
       exportData() {
-        window.location.href = 'http://' + this.host + '/api/exportCpGame/' + this.startValue + '/' + this.endValue + '/' + this.reportType + '/' + this.searchForm.gameType + '/' + this.searchForm.gameName;
+        window.location.href = 'http://' + this.host + '/api/exportCpStore/' + this.startValue + '/' + this.endValue + '/' + this.reportType + '/' + this.searchForm.region + '/' + this.searchForm.store;
       },
       filterData() {
         if (this.reportType === 'month') {
@@ -199,12 +165,12 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1])) {
             this.tableLoading = true;
-            getCpGameData({
+            getCpStoreData({
               startMonth: this.startValue,
               endMonth: this.endValue,
               range: 'month',
-              gameType: this.searchForm.gameType,
-              gameName: this.searchForm.gameName
+              region: this.searchForm.region,
+              store: this.searchForm.store
             }).then(res => {
               this.data = res.result;
               this.tableLoading = false;
@@ -232,12 +198,12 @@
           const endArray = this.endValue.split('-');
           if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
             this.tableLoading = true;
-            getCpGameData({
+            getCpStoreData({
               startMonth: this.startValue,
               endMonth: this.endValue,
               range: 'day',
-              gameType: this.searchForm.gameType,
-              gameName: this.searchForm.gameName
+              region: this.searchForm.region,
+              store: this.searchForm.store
             }).then(res => {
               this.data = res.result;
               this.tableLoading = false;
