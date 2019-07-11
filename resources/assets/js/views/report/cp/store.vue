@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card class="content-card">
     <h2 class="report-title">彩票年 - 投注站销量统计</h2>
     <Row class="filter">
       <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
@@ -66,7 +66,6 @@
   </Card>
 </template>
 <script>
-  import './overview/table.css';
   import {getCpStoreData} from '../../../api/report';
 
   export default {
@@ -237,3 +236,33 @@
     }
   }
 </script>
+<style scoped src="./overview/table.css"></style>
+<style>
+  .content-card .ivu-card-body {
+    padding: 0 16px 16px;
+  }
+  
+  .ivu-table-cell {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  
+  .ivu-table-small td {
+    height: 25px !important;
+  }
+  
+  .ivu-table-small th {
+    height: 25px !important;
+    text-align: center !important;
+  }
+  
+  .ivu-table td,
+  .ivu-table th {
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .ivu-table-border td,
+  .ivu-table-border th {
+    border-right: 1px solid #ddd !important;
+  }
+</style>

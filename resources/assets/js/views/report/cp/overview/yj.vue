@@ -1,16 +1,15 @@
 <template>
-  <div>
-    <Card>
-      <h2 class="report-title">彩票年 - 佣金分配概览</h2>
-      <Row class="filter">
-        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
-          <Form-item label="报表类型">
-            <Select v-model="searchForm.report_type" style="width: 150px" @on-change="switchSearchForm">
-              <Option value="month">月报表</Option>
-              <Option value="day">日报表</Option>
-            </Select>
-          </Form-item>
-          <span v-if="reportType === 'month'">
+  <Card class="content-card">
+    <h2 class="report-title">彩票年 - 佣金分配概览</h2>
+    <Row class="filter">
+      <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+        <Form-item label="报表类型">
+          <Select v-model="searchForm.report_type" style="width: 150px" @on-change="switchSearchForm">
+            <Option value="month">月报表</Option>
+            <Option value="day">日报表</Option>
+          </Select>
+        </Form-item>
+        <span v-if="reportType === 'month'">
             <Form-item label="开始时间" prop="startMonth">
               <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
                           :editable=false @on-change="startChange"></DatePicker>
@@ -20,7 +19,7 @@
                           :editable=false @on-change="endChange"></DatePicker>
             </Form-item>
           </span>
-          <span v-if="reportType === 'day'">
+        <span v-if="reportType === 'day'">
             <Form-item label="开始时间" prop="startMonth">
               <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
                           :editable=false
@@ -32,23 +31,21 @@
                           @on-change="endChange"></DatePicker>
             </Form-item>
           </span>
-          <Form-item style="margin-left:-70px;">
-            <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
-          </Form-item>
-          <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
-                  style="margin-right: 10px">
-            导出报表
-          </Button>
-        </Form>
-      </Row>
-      <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
-             ref="table"></Table>
-    </Card>
-  </div>
+        <Form-item style="margin-left:-70px;">
+          <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
+        </Form-item>
+        <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
+                style="margin-right: 10px">
+          导出报表
+        </Button>
+      </Form>
+    </Row>
+    <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
+           ref="table"></Table>
+  </Card>
 </template>
 <script>
   import {getOverviewMonthData} from '../../../../api/report';
-  import './table.css';
 
   export default {
     data() {
@@ -278,3 +275,33 @@
     }
   }
 </script>
+<style scoped src="./table.css"></style>
+<style>
+  .content-card .ivu-card-body {
+    padding: 0 16px 16px;
+  }
+  
+  .ivu-table-cell {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
+  }
+  
+  .ivu-table-small td {
+    height: 25px !important;
+  }
+  
+  .ivu-table-small th {
+    height: 25px !important;
+    text-align: center !important;
+  }
+  
+  .ivu-table td,
+  .ivu-table th {
+    border-bottom: 1px solid #ddd !important;
+  }
+  
+  .ivu-table-border td,
+  .ivu-table-border th {
+    border-right: 1px solid #ddd !important;
+  }
+</style>
