@@ -40,7 +40,7 @@ class CpRegionReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', $startMonth . '-' . $endMonth . '区域销量统计（' . $range . '报）')
+            ->setCellValue('A1', '区域销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '市区')
             ->setCellValue('B3', '' . $range . '体育彩票销量')

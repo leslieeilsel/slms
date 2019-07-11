@@ -41,7 +41,7 @@ class CpGameReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', $startMonth . '-' . $endMonth . '玩法销量统计（' . $range . '报）')
+            ->setCellValue('A1', '玩法销量统计_彩票年_' . $startMonth . '-' . $endMonth .'（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '序号')
             ->setCellValue('B3', '游戏名称')
@@ -135,7 +135,7 @@ class CpGameReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="玩法销量统计-' . $range . '报.xlsx"');
+        header('Content-Disposition: attachment;filename="玩法销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');

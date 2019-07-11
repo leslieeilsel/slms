@@ -27,6 +27,23 @@ class FeeOverviewMonthReport
         $data = $this->getOverviewMonthData($params, 'export');
         $startMonth = str_replace('-', '.', $params['startMonth']);
         $endMonth = str_replace('-', '.', $params['endMonth']);
+
+        $reportType = $params['reportType'];
+        $reportName = '';
+        switch ($reportType) {
+            case 'fxf':
+                $reportName = '发行费';
+                break;
+            case 'gyj':
+                $reportName = '公益金';
+                break;
+            case 'yj':
+                $reportName = '佣金';
+                break;
+            case 'fj':
+                $reportName = '返奖';
+                break;
+        }
         $range = $params['range'] === 'month' ? '月' : '日';
         // 创建一个Spreadsheet对象
         $spreadsheet = new Spreadsheet();
@@ -40,12 +57,12 @@ class FeeOverviewMonthReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', $startMonth . '-' . $endMonth . '发行费分配概览（' . $range . '报）')
+            ->setCellValue('A1', $reportName . '分配概览_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '市区')
             ->setCellValue('B3', '' . $range . '体育彩票销量')
-            ->setCellValue('J3', '' . $range . '分配体彩发行费')
-            ->setCellValue('Q3', '发行费合计')
+            ->setCellValue('J3', '' . $range . '分配体彩' . $reportName)
+            ->setCellValue('Q3', $reportName . '合计')
             ->setCellValue('B4', '概率游戏')
             ->setCellValue('C4', '大乐透')
             ->setCellValue('D4', '排三')
@@ -145,7 +162,7 @@ class FeeOverviewMonthReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="发行费分配概览-' . $range . '报.xlsx"');
+        header('Content-Disposition: attachment;filename="' . $reportName . '分配概览_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');
