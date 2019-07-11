@@ -25,7 +25,7 @@ class ApiController extends Controller
         $report = new FeeOverviewMonthReport();
         $data = $report->getOverviewMonthData($param, 'page');
 
-        return response()->json(['result' => $data, 'baseUrl' => env('APP_URL')], 200);
+        return response()->json(['result' => $data], 200);
     }
 
     /**
@@ -62,7 +62,7 @@ class ApiController extends Controller
         $report = new CpRegionReport();
         $data = $report->getRegionReportData($param, 'page');
 
-        return response()->json(['result' => $data, 'baseUrl' => env('APP_URL')], 200);
+        return response()->json(['result' => $data], 200);
     }
 
     /**

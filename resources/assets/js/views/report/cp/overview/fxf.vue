@@ -59,7 +59,7 @@
         btnDisable: true,
         disable: true,
         loading: false,
-        baseUrl: '',
+        host: window.document.location.host,
         columns: [
           {
             title: '市区',
@@ -206,7 +206,6 @@
               this.columns[1].title = '月体育彩票销量';
               this.columns[2].title = '月分配彩票发行费';
               this.data = res.result;
-              this.baseUrl = res.baseUrl;
               this.loading = false;
               this.btnDisable = false;
             }).catch(function () {
@@ -237,7 +236,6 @@
               this.columns[1].title = '日体育彩票销量';
               this.columns[2].title = '日分配彩票发行费';
               this.data = res.result;
-              this.baseUrl = res.baseUrl;
               this.loading = false;
               this.btnDisable = false;
             }).catch(function () {
@@ -265,7 +263,7 @@
         }
       },
       exportData() {
-        window.location.href = this.baseUrl + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf' + '/' + this.reportType;
+        window.location.href = 'http://' + this.host + '/api/exportoverviewmonth/' + this.startValue + '/' + this.endValue + '/' + 'fxf' + '/' + this.reportType;
       },
       switchSearchForm(e) {
         this.reportType = e;

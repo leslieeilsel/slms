@@ -59,7 +59,7 @@
         btnDisable: true,
         disable: true,
         loading: false,
-        baseUrl: '',
+        host: window.document.location.host,
         columns: [
           {
             title: '市区',
@@ -142,7 +142,6 @@
             getCpRegionData(this.startValue, this.endValue, 'month').then(res => {
               this.columns[1].title = '月体育彩票销量';
               this.data = res.result;
-              this.baseUrl = res.baseUrl;
               this.loading = false;
               this.btnDisable = false;
             }).catch(function () {
@@ -172,7 +171,6 @@
             getCpRegionData(this.startValue, this.endValue, 'day').then(res => {
               this.columns[1].title = '日体育彩票销量';
               this.data = res.result;
-              this.baseUrl = res.baseUrl;
               this.loading = false;
               this.btnDisable = false;
             }).catch(function () {
@@ -200,7 +198,7 @@
         }
       },
       exportData() {
-        window.location.href = this.baseUrl + '/api/exportCpRegion/' + this.startValue + '/' + this.endValue + '/' + this.reportType;
+        window.location.href = 'http://' + this.host + '/api/exportCpRegion/' + this.startValue + '/' + this.endValue + '/' + this.reportType;
       },
       switchSearchForm(e) {
         this.reportType = e;
