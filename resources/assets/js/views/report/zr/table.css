@@ -1,0 +1,29 @@
+.report-title {
+    margin: 8px;
+    text-align: center;
+    color: #2d8cf0;
+    letter-spacing: 1px;
+    font-size: 19px;
+}
+
+.main .single-page-con .single-page {
+    margin: 18px !important;
+}
+
+.main .single-page-con {
+    background-color: #f5f7f9 !important;
+}
+
+.exportReport {
+    float: right;
+}
+
+.ivu-select .ivu-select-dropdown ul {
+    margin-bottom: 0;
+}
+
+.filter {
+    padding-top: 20px;
+    background: #f8f8f9;
+    border-top: 1px solid #dcdee2;
+}

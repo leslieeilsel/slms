@@ -82,5 +82,14 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('cpStore', 'Api\ApiController@getCpStoreData');
     Route::get('exportCpStore/{startMonth}/{endMonth}/{range}/{region}/{store}', 'Api\ApiController@exportCpStore');
+
+    Route::post('zrRegion', 'Api\ApiController@getZrRegionData');
+    Route::get('exportZrRegion/{startMonth}/{endMonth}/{range}', 'Api\ApiController@exportZrRegion');
+
+    Route::post('zrGame', 'Api\ApiController@getZrGameData');
+    Route::get('exportZrGame/{startMonth}/{endMonth}/{range}/{gameType}/{gameName?}', 'Api\ApiController@exportZrGame');
+
+    Route::post('zrStore', 'Api\ApiController@getZrStoreData');
+    Route::get('exportZrStore/{startMonth}/{endMonth}/{range}/{region}/{store}', 'Api\ApiController@exportZrStore');
 });
 

@@ -67,3 +67,49 @@ export function getCpStoreData(form) {
     data: {...form}
   })
 }
+
+/**
+ * 区域销量统计
+ *
+ * @param startMonth 开始时间
+ * @param endMonth 结束时间
+ * @param range 报表范围
+ * @returns {*}
+ */
+export function getZrRegionData(startMonth, endMonth, range) {
+  return request({
+    url: '/api/zrRegion',
+    method: 'post',
+    data: {
+      startMonth,
+      endMonth,
+      range
+    }
+  })
+}
+
+/**
+ * 玩法销量统计
+ *
+ * @returns {*}
+ */
+export function getZrGameData(form) {
+  return request({
+    url: '/api/zrGame',
+    method: 'post',
+    data: {...form}
+  })
+}
+
+/**
+ * 门店销量统计
+ *
+ * @returns {*}
+ */
+export function getZrStoreData(form) {
+  return request({
+    url: '/api/zrStore',
+    method: 'post',
+    data: {...form}
+  })
+}

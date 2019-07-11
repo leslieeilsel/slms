@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class CpRegionReport
+class ZrRegionReport
 {
     public $choose_year;
     public $last_year;
@@ -40,7 +40,7 @@ class CpRegionReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', '区域销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
+            ->setCellValue('A1', '区域销量统计_自然年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '市区')
             ->setCellValue('B3', '' . $range . '体育彩票销量')
@@ -50,14 +50,13 @@ class CpRegionReport
             ->setCellValue('E4', '11选5')
             ->setCellValue('F4', '竞彩')
             ->setCellValue('G4', '足彩')
-            ->setCellValue('H4', '即开型')
-            ->setCellValue('I4', '总销量');
+            ->setCellValue('H4', '总销量');
         // 合并行、列
         $spreadsheet->getActiveSheet()
-            ->mergeCells('A1:I1')
-            ->mergeCells('A2:H2')
+            ->mergeCells('A1:H1')
+            ->mergeCells('A2:G2')
             ->mergeCells('A3:A4')
-            ->mergeCells('B3:I3');
+            ->mergeCells('B3:H3');
         // 添加动态数据
         $spreadsheet->getActiveSheet()
             ->fromArray(
@@ -75,7 +74,6 @@ class CpRegionReport
         $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(16);
         // 设置高度
         $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(25);
         // 设置对齐方式
@@ -86,7 +84,7 @@ class CpRegionReport
             ],
         ];
         $spreadsheet->getActiveSheet()->getStyle('A2')->applyFromArray($numberStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B5:I20')->applyFromArray($numberStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B5:H20')->applyFromArray($numberStyleArray);
         $centerStyleArray = [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -95,7 +93,7 @@ class CpRegionReport
         ];
         $spreadsheet->getActiveSheet()->getStyle('A1')->applyFromArray($centerStyleArray);
         $spreadsheet->getActiveSheet()->getStyle('A3:A20')->applyFromArray($centerStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B3:I4')->applyFromArray($centerStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B3:H4')->applyFromArray($centerStyleArray);
         // 设置边框
         $allBordersStyleArray = [
             'borders' => [
@@ -104,8 +102,8 @@ class CpRegionReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A1:I1')->applyFromArray($allBordersStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('A3:I20')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A1:H1')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A3:H20')->applyFromArray($allBordersStyleArray);
         $outlineBordersStyleArray = [
             'borders' => [
                 'outline' => [
@@ -113,10 +111,10 @@ class CpRegionReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A2:I2')->applyFromArray($outlineBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A2:H2')->applyFromArray($outlineBordersStyleArray);
         // 设置千分位
-        $spreadsheet->getActiveSheet()->getStyle('B5:I18')->getNumberFormat()->setFormatCode('#,##0.00');
-        $spreadsheet->getActiveSheet()->getStyle('B19:I19')->getNumberFormat()->setFormatCode('0.0%');
+        $spreadsheet->getActiveSheet()->getStyle('B5:H18')->getNumberFormat()->setFormatCode('#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('B19:H19')->getNumberFormat()->setFormatCode('0.0%');
         // 重命名 worksheet
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
@@ -126,7 +124,7 @@ class CpRegionReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="区域销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
+        header('Content-Disposition: attachment;filename="区域销量统计_自然年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');
@@ -183,7 +181,7 @@ class CpRegionReport
         $this->choose_year = $startDate[0];
         $this->last_year = $this->choose_year - 1;
 
-        $table = $date['range'] === 'month' ? 'slms_sum_m_cp_region' : 'slms_sum_d_cp_region';
+        $table = $date['range'] === 'month' ? 'slms_sum_m_zr_region' : 'slms_sum_d_zr_region';
 
         $publicFun = new PublicReportRepository();
 
@@ -197,8 +195,7 @@ class CpRegionReport
                 DB::raw("SUM(case when game.num='A0010' then sale_amt else 0 end) as tc3"),
                 DB::raw("SUM(case when game.num='A0052' then sale_amt else 0 end) as tc4"),
                 DB::raw("SUM(case when game.type=2 then sale_amt else 0 end) as tc5"),
-                DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then sale_amt else 0 end) as tc6"),
-                DB::raw("SUM(case when game.type=0 then sale_amt else 0 end) as tc7"));
+                DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then sale_amt else 0 end) as tc6"));
         if ($date['range'] === 'month') {
             $query->whereIn('date', $this->buildMonthList($startDate, $endDate));
         } else {
@@ -216,11 +213,11 @@ class CpRegionReport
         $data = collect($data)->groupBy('year');
 
         //组织今年-同比年数据
-        $this_year = !empty($data[$this->choose_year]) ? $publicFun->dataByYear($data[$this->choose_year], $this->choose_year) : $this->setZeroData();
-        $last_year = !empty($data[$this->last_year]) ? $publicFun->dataByYear($data[$this->last_year], $this->last_year) : $this->setZeroData();
+        $this_year = !empty($data[$this->choose_year]) ? $this->dataByYear($data[$this->choose_year], $this->choose_year) : $this->setZeroData();
+        $last_year = !empty($data[$this->last_year]) ? $this->dataByYear($data[$this->last_year], $this->last_year) : $this->setZeroData();
         //添加合计+增幅行
-        $this_year_ct = $publicFun->array_sum_column($this_year);
-        $last_year_ct = $publicFun->array_sum_column($last_year);
+        $this_year_ct = $this->array_sum_column($this_year);
+        $last_year_ct = $this->array_sum_column($last_year);
         $great = $publicFun->greating($this_year_ct, $last_year_ct, $action);
         $order = $publicFun->orderGreaating($great);
 
@@ -304,5 +301,75 @@ class CpRegionReport
         }
 
         return $data;
+    }
+
+    /**
+     * 组织xx年数据
+     *
+     * @param array  $data
+     * @param string $dataYear
+     * @return array
+     */
+    public function dataByYear($data, $dataYear)
+    {
+        $year = [];
+        $region = ['西安', '杨凌', '咸阳', '渭南', '宝鸡', '铜川', '商洛', '安康', '汉中', '延安', '榆林', '韩城'];
+        $dataRegion = $data->pluck('region_name')->toArray();
+        $diffRegion = array_diff($region, $dataRegion);
+        $data = $data->all();
+        foreach ($diffRegion as $k => $v) {
+            array_splice($data, $k, 0, [[
+                'region_name' => $v,
+                'year' => $dataYear,
+                'tc1' => 0,
+                'tc2' => 0,
+                'tc3' => 0,
+                'tc4' => 0,
+                'tc5' => 0,
+                'tc6' => 0,
+            ]]);
+        }
+        foreach ($data as $dk => $dv) {
+            array_splice($dv, 0, 1, $dv['region_name']);
+            array_splice($dv, 1, 1);
+            $dv['tc7'] = number_format($dv['tc1'] + $dv['tc2'] + $dv['tc3'] + $dv['tc4'] + $dv['tc5'] + $dv['tc6'], 2, '.', '');
+            $year[] = $dv;
+        }
+
+        return $year;
+    }
+
+    /**
+     * 数组各列求和
+     *
+     * @param array $arr
+     * @return array
+     */
+    public function array_sum_column($arr)
+    {
+        $count = [];
+        $colums = [];
+        if (!empty($arr)) {
+            $keys = array_keys($arr[0]);
+            foreach ($keys as $kk => $kv) {
+                $colums[] = array_column($arr, $kv);
+            }
+            foreach ($colums as $ck => $cv) {
+                $count['tc' . $ck] = array_sum($cv);
+            }
+        } else {
+            $count = [
+                'tc0' => 0,
+                'tc1' => 0,
+                'tc2' => 0,
+                'tc3' => 0,
+                'tc4' => 0,
+                'tc5' => 0,
+                'tc6' => 0,
+                'tc7' => 0,
+            ];
+        }
+
+        return $count;
     }
 }

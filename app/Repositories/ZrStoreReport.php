@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
-class CpStoreReport
+class ZrStoreReport
 {
     public $choose_year;
     public $last_year;
@@ -41,7 +41,7 @@ class CpStoreReport
             ->setCategory('Test result file');
         // 添加表头
         $spreadsheet->setActiveSheetIndex(0)
-            ->setCellValue('A1', '投注站销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
+            ->setCellValue('A1', '投注站销量统计_自然年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）')
             ->setCellValue('A2', '单位：元')
             ->setCellValue('A3', '投注站')
             ->setCellValue('B3', '概率游戏')
@@ -50,12 +50,11 @@ class CpStoreReport
             ->setCellValue('E3', '11选5')
             ->setCellValue('F3', '竞彩')
             ->setCellValue('G3', '足彩')
-            ->setCellValue('H3', '即开型')
-            ->setCellValue('I3', '总销量');
+            ->setCellValue('H3', '总销量');
         // 合并行、列
         $spreadsheet->getActiveSheet()
-            ->mergeCells('A1:I1')
-            ->mergeCells('A2:H2');
+            ->mergeCells('A1:H1')
+            ->mergeCells('A2:G2');
         // 添加动态数据
         $spreadsheet->getActiveSheet()
             ->fromArray(
@@ -73,7 +72,6 @@ class CpStoreReport
         $spreadsheet->getActiveSheet()->getColumnDimension('F')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('G')->setWidth(16);
         $spreadsheet->getActiveSheet()->getColumnDimension('H')->setWidth(16);
-        $spreadsheet->getActiveSheet()->getColumnDimension('I')->setWidth(16);
         // 设置高度
         $spreadsheet->getActiveSheet()->getRowDimension('1')->setRowHeight(25);
         // 设置对齐方式
@@ -84,7 +82,7 @@ class CpStoreReport
             ],
         ];
         $spreadsheet->getActiveSheet()->getStyle('A2')->applyFromArray($numberStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('A4:I' . ($count + 3))->applyFromArray($numberStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A4:H' . ($count + 3))->applyFromArray($numberStyleArray);
         $centerStyleArray = [
             'alignment' => [
                 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -93,7 +91,7 @@ class CpStoreReport
         ];
         $spreadsheet->getActiveSheet()->getStyle('A1')->applyFromArray($centerStyleArray);
         $spreadsheet->getActiveSheet()->getStyle('A3:A' . ($count + 3))->applyFromArray($centerStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('B3:I3')->applyFromArray($centerStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('B3:H3')->applyFromArray($centerStyleArray);
         // 设置边框
         $allBordersStyleArray = [
             'borders' => [
@@ -102,8 +100,8 @@ class CpStoreReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A1:I1')->applyFromArray($allBordersStyleArray);
-        $spreadsheet->getActiveSheet()->getStyle('A3:I' . ($count + 3))->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A1:H1')->applyFromArray($allBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A3:H' . ($count + 3))->applyFromArray($allBordersStyleArray);
         $outlineBordersStyleArray = [
             'borders' => [
                 'outline' => [
@@ -111,9 +109,9 @@ class CpStoreReport
                 ],
             ],
         ];
-        $spreadsheet->getActiveSheet()->getStyle('A2:I2')->applyFromArray($outlineBordersStyleArray);
+        $spreadsheet->getActiveSheet()->getStyle('A2:H2')->applyFromArray($outlineBordersStyleArray);
         // 设置千分位
-        $spreadsheet->getActiveSheet()->getStyle('B4:I' . ($count + 3))->getNumberFormat()->setFormatCode('#,##0.00');
+        $spreadsheet->getActiveSheet()->getStyle('B4:H' . ($count + 3))->getNumberFormat()->setFormatCode('#,##0.00');
         // 重命名 worksheet
         $spreadsheet->getActiveSheet()->setTitle('sheet');
         // 将活动工作表索引设置为第一个工作表，以便Excel将其作为第一个工作表打开
@@ -123,7 +121,7 @@ class CpStoreReport
 
         // 将输出重定向到客户端的Web浏览器 (Xlsx)
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="投注站销量统计_彩票年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
+        header('Content-Disposition: attachment;filename="投注站销量统计_自然年_' . $startMonth . '-' . $endMonth . '（' . $range . '报）.xlsx"');
         header('Cache-Control: max-age=0');
         // 如果正在使用IE 9
         header('Cache-Control: max-age=1');
@@ -174,9 +172,9 @@ class CpStoreReport
      */
     public function toGetData($date)
     {
-        $table = $date['range'] === 'month' ? 'slms_sum_m_cp_store' : 'slms_sum_d_cp_store';
+        $table = $date['range'] === 'month' ? 'slms_sum_m_zr_store' : 'slms_sum_d_zr_store';
 
-        $query = DB::table($table)->select('store_num', 'sale_gl', 'sale_dlt', 'sale_pl', 'sale_xuan', 'sale_jc', 'sale_zc', 'sale_jk', 'sale_total');
+        $query = DB::table($table)->select('store_num', 'sale_gl', 'sale_dlt', 'sale_pl', 'sale_xuan', 'sale_jc', 'sale_zc', 'sale_total');
 
         $query->whereBetween('date', [$date['startMonth'], $date['endMonth']]);
 
