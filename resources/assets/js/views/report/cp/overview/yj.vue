@@ -1,6 +1,7 @@
 <template>
   <div>
     <Card>
+      <h2 class="report-title">彩票年 - 佣金分配概览</h2>
       <Row class="filter">
         <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
           <Form-item label="报表类型">
@@ -96,7 +97,7 @@
                 title: '11选5',
                 key: 'tc4',
                 align: 'right',
-                width: 100
+                width: 110
               },
               {
                 title: '竞彩',

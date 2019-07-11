@@ -1,5 +1,6 @@
 <template>
   <Card>
+    <h2 class="report-title">彩票年 - 玩法销量统计</h2>
     <Row class="filter">
       <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
         <Form-item label="报表类型">
@@ -9,26 +10,26 @@
           </Select>
         </Form-item>
         <span v-if="reportType === 'month'">
-            <Form-item label="开始时间" prop="startMonth">
-              <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
-                          :editable=false @on-change="startChange"></DatePicker>
-            </Form-item>
-            <Form-item label="结束时间" prop="endMonth">
-              <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
-                          :editable=false @on-change="endChange"></DatePicker>
-            </Form-item>
+          <Form-item label="开始时间" prop="startMonth">
+            <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
+                        :editable=false @on-change="startChange"></DatePicker>
+          </Form-item>
+          <Form-item label="结束时间" prop="endMonth">
+            <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
+                        :editable=false @on-change="endChange"></DatePicker>
+          </Form-item>
           </span>
         <span v-if="reportType === 'day'">
-            <Form-item label="开始时间" prop="startMonth">
-              <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
-                          :editable=false
-                          @on-change="startChange"></DatePicker>
-            </Form-item>
-            <Form-item label="结束时间" prop="endMonth">
-              <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
-                          :editable=false
-                          @on-change="endChange"></DatePicker>
-            </Form-item>
+          <Form-item label="开始时间" prop="startMonth">
+            <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
+                        :editable=false
+                        @on-change="startChange"></DatePicker>
+          </Form-item>
+          <Form-item label="结束时间" prop="endMonth">
+            <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
+                        :editable=false
+                        @on-change="endChange"></DatePicker>
+          </Form-item>
           </span>
         <Form-item label="游戏类型" prop="gameType">
           <Select v-model="searchForm.gameType" style="width:150px">

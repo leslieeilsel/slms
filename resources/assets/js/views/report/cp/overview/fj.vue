@@ -1,6 +1,7 @@
 <template>
   <div>
     <Card>
+      <h2 class="report-title">彩票年 - 返奖分配概览</h2>
       <Row class="filter">
         <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
           <Form-item label="报表类型">

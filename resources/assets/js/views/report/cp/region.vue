@@ -1,49 +1,48 @@
 <template>
-  <div>
-    <Card>
-      <Row class="filter">
-        <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
-          <Form-item label="报表类型">
-            <Select v-model="searchForm.report_type" style="width: 150px" @on-change="switchSearchForm">
-              <Option value="month">月报表</Option>
-              <Option value="day">日报表</Option>
-            </Select>
+  <Card>
+    <h2 class="report-title">彩票年 - 区域销量统计</h2>
+    <Row class="filter">
+      <Form ref="searchForm" :model="searchForm" inline :label-width="70" class="search-form">
+        <Form-item label="报表类型">
+          <Select v-model="searchForm.report_type" style="width: 150px" @on-change="switchSearchForm">
+            <Option value="month">月报表</Option>
+            <Option value="day">日报表</Option>
+          </Select>
+        </Form-item>
+        <span v-if="reportType === 'month'">
+          <Form-item label="开始时间" prop="startMonth">
+            <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
+                        :editable=false @on-change="startChange"></DatePicker>
           </Form-item>
-          <span v-if="reportType === 'month'">
-            <Form-item label="开始时间" prop="startMonth">
-              <DatePicker type="month" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
-                          :editable=false @on-change="startChange"></DatePicker>
-            </Form-item>
-            <Form-item label="结束时间" prop="endMonth">
-              <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
-                          :editable=false @on-change="endChange"></DatePicker>
-            </Form-item>
-          </span>
-          <span v-if="reportType === 'day'">
-            <Form-item label="开始时间" prop="startMonth">
-              <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
-                          :editable=false
-                          @on-change="startChange"></DatePicker>
-            </Form-item>
-            <Form-item label="结束时间" prop="endMonth">
-              <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
-                          :editable=false
-                          @on-change="endChange"></DatePicker>
-            </Form-item>
-          </span>
-          <Form-item style="margin-left:-70px;">
-            <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
+          <Form-item label="结束时间" prop="endMonth">
+            <DatePicker type="month" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
+                        :editable=false @on-change="endChange"></DatePicker>
           </Form-item>
-          <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
-                  style="margin-right: 10px">
-            导出报表
-          </Button>
-        </Form>
-      </Row>
-      <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
-             ref="table"></Table>
-    </Card>
-  </div>
+        </span>
+        <span v-if="reportType === 'day'">
+          <Form-item label="开始时间" prop="startMonth">
+            <DatePicker type="date" v-model="searchForm.startMonth" placeholder="开始时间" style="width: 150px"
+                        :editable=false
+                        @on-change="startChange"></DatePicker>
+          </Form-item>
+          <Form-item label="结束时间" prop="endMonth">
+            <DatePicker type="date" v-model="searchForm.endMonth" placeholder="结束时间" style="width: 150px"
+                        :editable=false
+                        @on-change="endChange"></DatePicker>
+          </Form-item>
+        </span>
+        <Form-item style="margin-left:-70px;">
+          <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
+        </Form-item>
+        <Button class="exportReport" @click="exportData" type="primary" :disabled="btnDisable" icon="md-cloud-upload"
+                style="margin-right: 10px">
+          导出报表
+        </Button>
+      </Form>
+    </Row>
+    <Table :columns="columns" :loading="loading" :data="data" border class="default" stripe size="small"
+           ref="table"></Table>
+  </Card>
 </template>
 <script>
   import {getCpRegionData} from '../../../api/report';

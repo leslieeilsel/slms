@@ -1,3 +1,15 @@
+.ivu-card-body {
+    padding: 0 16px 16px;
+}
+
+.report-title {
+    margin: 8px;
+    text-align: center;
+    color: #2d8cf0;
+    letter-spacing: 1px;
+    font-size: 19px;
+}
+
 .ivu-table-cell {
     padding-left: 5px !important;
     padding-right: 5px !important;
