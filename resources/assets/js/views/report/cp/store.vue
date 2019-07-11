@@ -196,7 +196,8 @@
         } else {
           const startArray = this.startValue.split('-');
           const endArray = this.endValue.split('-');
-          if ((endArray[0] === startArray[0] && endArray[1] >= startArray[1] && endArray[2] >= startArray[2])) {
+          if ((endArray[0] === startArray[0] && endArray[1] === startArray[1] && endArray[2] >= startArray[2]) ||
+            (endArray[0] === startArray[0] && endArray[1] > startArray[1])) {
             this.tableLoading = true;
             getCpStoreData({
               startMonth: this.startValue,
