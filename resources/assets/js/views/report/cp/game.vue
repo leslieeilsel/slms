@@ -191,6 +191,7 @@
         this.disable = this.btnDisable = true;
       },
       exportData() {
+        console.log(this.host)
         window.location.href = 'http://' + this.host + '/api/exportCpGame/' + this.startValue + '/' + this.endValue + '/' + this.reportType + '/' + this.searchForm.gameType + '/' + this.searchForm.gameName;
       },
       filterData() {
