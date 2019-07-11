@@ -255,7 +255,7 @@
                 content: '开始月份不能大于结束月份，请重新选择！',
                 closable: true
               });
-            } else if (endArray[2] < startArray[2]) {
+            } else if (endArray[1] === startArray[1] && endArray[2] < startArray[2]) {
               this.$Message.error({
                 content: '开始日期不能大于结束日期，请重新选择！',
                 closable: true
