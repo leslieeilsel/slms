@@ -8,13 +8,14 @@
         "php": "^7.1.3",
         "fideloper/proxy": "^4.0",
         "jenssegers/agent": "^2.6",
+        "kylekatarnls/laravel-carbon-2": "^1.0.0",
         "laravel/framework": "5.7.*",
+        "laravel/telescope": "~1.0",
         "laravel/tinker": "^1.0",
+        "nesbot/carbon": "2.16.3 as 1.34.0",
         "phpoffice/phpspreadsheet": "^1.7",
         "rap2hpoutre/laravel-log-viewer": "^1.0",
-        "tymon/jwt-auth": "1.0.0-rc.3",
-        "nesbot/carbon": "2.16.3 as 1.34.0",
-        "kylekatarnls/laravel-carbon-2": "^1.0.0"
+        "tymon/jwt-auth": "1.0.0-rc.3"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
