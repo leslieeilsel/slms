@@ -51,7 +51,7 @@
         </Button>
       </Form>
     </Row>
-    <Table stripe border size="small" :columns="columns" :loading="tableLoading" :data="data"></Table>
+    <Table :height="tableHeight" stripe border size="small" :columns="columns" :loading="tableLoading" :data="data"></Table>
   </Card>
 </template>
 <script>
@@ -60,6 +60,7 @@
   export default {
     data() {
       return {
+        tableHeight: 0,
         reportType: 'month',
         searchForm: {
           report_type: 'month',
@@ -175,6 +176,7 @@
       }
     },
     mounted() {
+      this.tableHeight = this.$parent.$el.clientHeight - 175 - this.$el.childNodes[4].childNodes[2].clientHeight;
     },
     methods: {
       startChange(daterange) {
