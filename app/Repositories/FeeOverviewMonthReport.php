@@ -353,7 +353,8 @@ class FeeOverviewMonthReport
                 DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then sale_amt else 0 end) as tc6"),
                 DB::raw("SUM(case when game.type=0 then sale_amt else 0 end) as tc7"));
         if ($date['range'] === 'month') {
-            $query->whereIn('date', $this->buildMonthList($startDate, $endDate));
+            $query->whereIn(DB::raw('left(date, 4)'), [(int) $this->choose_year, (int) $this->last_year]);
+            $query->whereBetween(DB::raw('right(date, 2)'), [(int) $startDate[1], (int) $endDate[1]]);
         } else {
             $thisDate = $publicFun->getDay($date['startMonth'], $date['endMonth']);
             $lastDate = $publicFun->getDay(
