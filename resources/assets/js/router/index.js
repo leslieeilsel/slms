@@ -3,11 +3,11 @@ import Vue from 'vue';
 import iView from 'iview';
 import store from '../store'
 import VueRouter from 'vue-router';
-import { getRouter } from 'api/system';
+import {getRouter} from 'api/system';
 import layout from 'views/layout';
 
-import { constantRouterMap } from './router';
-import { getToken } from "utils/storage";
+import {constantRouterMap} from './router';
+import {getToken} from "utils/storage";
 
 Vue.use(VueRouter);
 
@@ -37,12 +37,23 @@ router.beforeEach((to, from, next) => {
               getRouters = data.result; //后台拿到路由
               routerGo(to, next) //执行路由跳转方法
             });
-            next({ ...to,
+            if (_hmt) {
+              if (to.path) {
+                _hmt.push(['_trackPageview', '/#' + to.fullPath]);
+              }
+            }
+            next({
+              ...to,
               replace: true
             }); // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           });
         });
       } else {
+        if (_hmt) {
+          if (to.path) {
+            _hmt.push(['_trackPageview', '/#' + to.fullPath]);
+          }
+        }
         next();
       }
     }
@@ -60,7 +71,8 @@ router.beforeEach((to, from, next) => {
 function routerGo(to, next) {
   getRouters = filterAsyncRouter(getRouters); //过滤路由
   router.addRoutes(getRouters); //动态添加路由
-  next({ ...to,
+  next({
+    ...to,
     replace: true
   })
 }
