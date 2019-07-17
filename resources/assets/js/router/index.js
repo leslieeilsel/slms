@@ -37,11 +37,6 @@ router.beforeEach((to, from, next) => {
               getRouters = data.result; //后台拿到路由
               routerGo(to, next) //执行路由跳转方法
             });
-            if (_hmt) {
-              if (to.path) {
-                _hmt.push(['_trackPageview', '/#' + to.fullPath]);
-              }
-            }
             next({
               ...to,
               replace: true
@@ -49,11 +44,6 @@ router.beforeEach((to, from, next) => {
           });
         });
       } else {
-        if (_hmt) {
-          if (to.path) {
-            _hmt.push(['_trackPageview', '/#' + to.fullPath]);
-          }
-        }
         next();
       }
     }
