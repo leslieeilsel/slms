@@ -14,6 +14,7 @@
         "laravel/tinker": "^1.0",
         "nesbot/carbon": "2.16.3 as 1.34.0",
         "phpoffice/phpspreadsheet": "^1.7",
+        "protoqol/prequel": "^1.11",
         "rap2hpoutre/laravel-log-viewer": "^1.0",
         "tymon/jwt-auth": "1.0.0-rc.3"
     },
