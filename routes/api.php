@@ -91,5 +91,8 @@ Route::group(['middleware' => 'api'], function ($router) {
 
     Route::post('zrStore', 'Api\ApiController@getZrStoreData');
     Route::get('exportZrStore/{startMonth}/{endMonth}/{range}/{region}/{store}', 'Api\ApiController@exportZrStore');
+
+    Route::post('zjRegion', 'Api\ApiController@getZjRegionData');
+    Route::get('exportZjRegion/{startMonth}/{endMonth}/{range}', 'Api\ApiController@exportZjRegion');
 });
 

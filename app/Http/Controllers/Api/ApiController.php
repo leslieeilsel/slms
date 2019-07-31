@@ -9,6 +9,7 @@ use App\Repositories\CpStoreReport;
 use App\Repositories\ZrRegionReport;
 use App\Repositories\ZrGameReport;
 use App\Repositories\ZrStoreReport;
+use App\Repositories\ZjRegionReport;
 use App\Repositories\FeeOverviewMonthReport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -276,6 +277,41 @@ class ApiController extends Controller
             'gameName' => $gameName,
         ];
         $report = new ZrStoreReport();
+        $data = $report->export($params);
+    }
+
+    /**
+     * 彩票年区域销量数据
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getZjRegionData(Request $request)
+    {
+        $param = $request->input();
+        $report = new ZjRegionReport();
+        $data = $report->getRegionReportData($param, 'page');
+
+        return response()->json(['result' => $data], 200);
+    }
+
+    /**
+     * 导出彩票年区域销量统计
+     *
+     * @param string $startMonth
+     * @param string $endMonth
+     * @param string $range
+     * @return void
+     * @throws Exception
+     */
+    public function exportZjRegion($startMonth, $endMonth, $range)
+    {
+        $params = [
+            'startMonth' => $startMonth,
+            'endMonth' => $endMonth,
+            'range' => $range,
+        ];
+        $report = new ZjRegionReport();
         $data = $report->export($params);
     }
 }

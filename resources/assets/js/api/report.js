@@ -113,3 +113,16 @@ export function getZrStoreData(form) {
     data: {...form}
   })
 }
+
+/**
+ * 区域销量统计
+ *
+ * @returns {*}
+ */
+export function getZjRegionData(form) {
+  return request({
+    url: '/api/zjRegion',
+    method: 'post',
+    data: {...form}
+  })
+}
