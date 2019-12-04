@@ -209,7 +209,7 @@ class CpRegionReport
             );
             $query->whereIn('date', array_merge($thisDate, $lastDate));
         }
-        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
+        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6104', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
             ->groupBy('year', 'region_name')
             ->orderBy('region_num')
             ->get();
@@ -230,10 +230,11 @@ class CpRegionReport
         array_splice($order, 0, 1, '同比增幅排名');
         //组织body
         $body = $this_year;
-        $body[12] = $this_year_ct;
-        $body[13] = $last_year_ct;
-        $body[14] = $great;
-        $body[15] = $order;
+        $count = count($body);
+        $body[$count] = $this_year_ct;
+        $body[$count + 1] = $last_year_ct;
+        $body[$count + 2] = $great;
+        $body[$count + 3] = $order;
 
         return $body;
     }
@@ -267,7 +268,7 @@ class CpRegionReport
     {
         $newBody = [];
         foreach ($body as $key => $rows) {
-            if ($key >= 14) {
+            if ($key >= count($body) - 2) {
                 $newBody[$key] = $rows;
             } else {
                 foreach ($rows as $k => $row) {

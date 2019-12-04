@@ -12,8 +12,7 @@ class FeeOverviewMonthReport
     public $last_year;
 
     public function __construct()
-    {
-    }
+    { }
 
     /**
      * 导出报表
@@ -92,7 +91,7 @@ class FeeOverviewMonthReport
                 $data,      // The data to set
                 null,       // Array values with this value will not be set
                 'A5'        // Top left coordinate of the worksheet range where
-            // we want to set these values (default is A1)
+                // we want to set these values (default is A1)
             );
         //  设置宽度
         $spreadsheet->getActiveSheet()->getColumnDimension('A')->setWidth(16);
@@ -235,9 +234,86 @@ class FeeOverviewMonthReport
      */
     public function getGyjOverviewMonthData($date, $action)
     {
+
         $fee = ['0.0925', '0.09', '0.085', '0.07', '0.045', '0.055', '0.05'];
-        $body = $this->getMonthFeeData($date, $fee, $action);
-        $body = $this->bodyFormat($body, $action);
+        $fee2 = ['0.0925', '0.09', '0.085', '0.0725', '0.05', '0.055', '0.05'];
+
+        $startDate = explode('-', $date['startMonth']);
+        $endDate = explode('-', $date['endMonth']);
+        if ((int) $startDate[0] == 2019 && (int) $startDate[1] >= 2) {
+            $body = $this->getMonthFeeData($date, $fee2, $action);
+            $body = $this->bodyFormat($body, $action);
+        } else if (((int) $endDate[0] == 2019 && (int) $endDate[1] < 2) || (int) $endDate[0] < 2019) {
+            $body = $this->getMonthFeeData($date, $fee, $action);
+            $body = $this->bodyFormat($body, $action);
+        } else {
+            $date1 = [
+                'startMonth' => "2019-01",
+                'endMonth' => "2019-01",
+                'range' => "month"
+            ];
+            $body1 = $this->getMonthFeeData($date1, $fee, $action);
+            $body1 = $this->bodyFormat($body1, $action);
+            $date2 = [
+                'startMonth' => "2019-02",
+                'endMonth' => $date['endMonth'],
+                'range' => "month"
+            ];
+            $body2 = $this->getMonthFeeData($date2, $fee, $action);
+            $body2 = $this->bodyFormat($body2, $action);
+
+            if (count($body2) > count($body1)) {
+                $xixian = [[
+                    '西咸',
+                    'tc1' => '0.00',
+                    'tc2' => '0.00',
+                    'tc3' => '0.00',
+                    'tc4' => '0.00',
+                    'tc5' => '0.00',
+                    'tc6' => '0.00',
+                    'tc7' => '0.00',
+                    'tc8' => '0.00',
+                    'fee0' => '0.00',
+                    'fee1' => '0.00',
+                    'fee2' => '0.00',
+                    'fee3' => '0.00',
+                    'fee4' => '0.00',
+                    'fee5' => '0.00',
+                    'fee6' => '0.00',
+                    'fee7' => '0.00',
+                ]];
+                array_splice($body1, 1, 0, $xixian);
+            }
+            $body = [];
+            foreach ($body1 as $key => $value) {
+                if ($key < count($body1) - 2) {
+                    $body[] = [
+                        $value[0],
+                        'tc1' => number_format((float) str_replace(",", "", $value['tc1']) + (float) str_replace(",", "", $body2[$key]['tc1']), 2),
+                        'tc2' => number_format((float) str_replace(",", "", $value['tc2']) + (float) str_replace(",", "", $body2[$key]['tc2']), 2),
+                        'tc3' => number_format((float) str_replace(",", "", $value['tc3']) + (float) str_replace(",", "", $body2[$key]['tc3']), 2),
+                        'tc4' => number_format((float) str_replace(",", "", $value['tc4']) + (float) str_replace(",", "", $body2[$key]['tc4']), 2),
+                        'tc5' => number_format((float) str_replace(",", "", $value['tc5']) + (float) str_replace(",", "", $body2[$key]['tc5']), 2),
+                        'tc6' => number_format((float) str_replace(",", "", $value['tc6']) + (float) str_replace(",", "", $body2[$key]['tc6']), 2),
+                        'tc7' => number_format((float) str_replace(",", "", $value['tc7']) + (float) str_replace(",", "", $body2[$key]['tc7']), 2),
+                        'tc8' => number_format((float) str_replace(",", "", $value['tc8']) + (float) str_replace(",", "", $body2[$key]['tc8']), 2),
+                        'fee0' => number_format((float) str_replace(",", "", $value['fee0']) + (float) str_replace(",", "", $body2[$key]['fee0']), 2),
+                        'fee1' => number_format((float) str_replace(",", "", $value['fee1']) + (float) str_replace(",", "", $body2[$key]['fee1']), 2),
+                        'fee2' => number_format((float) str_replace(",", "", $value['fee2']) + (float) str_replace(",", "", $body2[$key]['fee2']), 2),
+                        'fee3' => number_format((float) str_replace(",", "", $value['fee3']) + (float) str_replace(",", "", $body2[$key]['fee3']), 2),
+                        'fee4' => number_format((float) str_replace(",", "", $value['fee4']) + (float) str_replace(",", "", $body2[$key]['fee4']), 2),
+                        'fee5' => number_format((float) str_replace(",", "", $value['fee5']) + (float) str_replace(",", "", $body2[$key]['fee5']), 2),
+                        'fee6' => number_format((float) str_replace(",", "", $value['fee6']) + (float) str_replace(",", "", $body2[$key]['fee6']), 2),
+                        'fee7' => number_format((float) str_replace(",", "", $value['fee7']) + (float) str_replace(",", "", $body2[$key]['fee7']), 2),
+                    ];
+                }
+            }
+
+            $body3 = $this->getMonthFeeData($date, $fee, $action);
+            $body3 = $this->bodyFormat($body3, $action);
+            $body[count($body1) - 2] = $body3[count($body1) - 2];
+            $body[count($body1) - 1] = $body3[count($body1) - 1];
+        }
 
         return $body;
     }
@@ -293,21 +369,21 @@ class FeeOverviewMonthReport
         if (!empty($sale)) {
             foreach ($sale as $sk => $sv) {
                 $temp = $sale[$sk];
-                array_splice($sv, 0, 1);//删除地区
-                array_splice($sv, -1, 1);//删除总量行
-                if ($sk == 14 || $sk == 15) {
+                array_splice($sv, 0, 1); //删除地区
+                array_splice($sv, -1, 1); //删除总量行
+                if ($sk == count($sale) - 2 || $sk == count($sale) - 1) {
                     $jin[$sk] = $temp;
-                    array_splice($jin[$sk], 0, 1);//增幅和排名行保持不变
-                    $k = 0;//费率下标
+                    array_splice($jin[$sk], 0, 1); //增幅和排名行保持不变
+                    $k = 0; //费率下标
                     foreach ($jin[$sk] as $jk => $jv) {
                         $sale[$sk]["fee" . $k] = $jv;
                         $k++;
                     }
                     $sale_jin[$sk] = $sale[$sk];
                 } else {
-                    $k = 0;//费率下标
+                    $k = 0; //费率下标
                     foreach ($sv as $svk => $svv) {
-                        $jinPer["fee" . $k] = $svv * $fee[$k];//其余行 销量*费率
+                        $jinPer["fee" . $k] = $svv * $fee[$k]; //其余行 销量*费率
                         $k++;
                     }
                     $jinPerCount = array_sum($jinPer);
@@ -351,7 +427,8 @@ class FeeOverviewMonthReport
                 DB::raw("SUM(case when game.num='A0052' then sale_amt else 0 end) as tc4"),
                 DB::raw("SUM(case when game.type=2 then sale_amt else 0 end) as tc5"),
                 DB::raw("SUM(case when game.num IN('B009','B010','B012','B002') then sale_amt else 0 end) as tc6"),
-                DB::raw("SUM(case when game.type=0 then sale_amt else 0 end) as tc7"));
+                DB::raw("SUM(case when game.type=0 then sale_amt else 0 end) as tc7")
+            );
         if ($date['range'] === 'month') {
             $query->whereIn(DB::raw('left(date, 4)'), [(int) $this->choose_year, (int) $this->last_year]);
             $query->whereBetween(DB::raw('right(date, 2)'), [(int) $startDate[1], (int) $endDate[1]]);
@@ -363,7 +440,7 @@ class FeeOverviewMonthReport
             );
             $query->whereIn('date', array_merge($thisDate, $lastDate));
         }
-        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
+        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6104', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
             ->groupBy('year', 'region_name')
             ->orderBy('region_num')
             ->get();
@@ -384,10 +461,11 @@ class FeeOverviewMonthReport
         array_splice($order, 0, 1, '同比增幅排名');
         //组织body
         $body = $this_year;
-        $body[12] = $this_year_ct;
-        $body[13] = $last_year_ct;
-        $body[14] = $great;
-        $body[15] = $order;
+        $count = count($body);
+        $body[$count] = $this_year_ct;
+        $body[$count + 1] = $last_year_ct;
+        $body[$count + 2] = $great;
+        $body[$count + 3] = $order;
 
         return $body;
     }
@@ -421,7 +499,7 @@ class FeeOverviewMonthReport
     {
         $newBody = [];
         foreach ($body as $key => $rows) {
-            if ($key >= 14) {
+            if ($key >= count($body) - 2) {
                 $newBody[$key] = $rows;
             } else {
                 foreach ($rows as $k => $row) {

@@ -107,6 +107,12 @@
             width: 100,
           },
           {
+            title: '西咸',
+            key: 'xixian',
+            align: 'right',
+            width: 100,
+          },
+          {
             title: '渭南',
             key: 'weinan',
             align: 'right',

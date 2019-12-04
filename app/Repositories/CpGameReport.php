@@ -196,6 +196,7 @@ class CpGameReport
                 DB::raw("SUM(case when region_num = 6101 then sale_amt else 0 end ) as xian"),
                 DB::raw("SUM(case when region_num = 6106 then sale_amt else 0 end ) as yangling"),
                 DB::raw("SUM(case when region_num = 6107 then sale_amt else 0 end ) as xianyang"),
+                DB::raw("SUM(case when region_num = 6104 then sale_amt else 0 end ) as xixian"),
                 DB::raw("SUM(case when region_num = 6110 then sale_amt else 0 end ) as weinan"),
                 DB::raw("SUM(case when region_num = 6113 then sale_amt else 0 end ) as baoji"),
                 DB::raw("SUM(case when region_num = 6116 then sale_amt else 0 end ) as tongchuan"),
@@ -271,7 +272,7 @@ class CpGameReport
         foreach ($data as $dk => $dv) {
             $temp['num'] = $dk + 1;
             $this->array_insert($dv, 0, $temp);
-            $dv['game_total'] = number_format($dv['xian'] + $dv['yangling'] + $dv['xianyang'] + $dv['weinan'] + $dv['baoji'] + $dv['tongchuan'] + $dv['shangluo'] + $dv['ankang'] + $dv['hanzhong'] + $dv['yanan'] + $dv['yulin'] + $dv['hancheng'], 2, '.', '');;
+            $dv['game_total'] = number_format($dv['xian'] + $dv['yangling'] + $dv['xianyang'] + $dv['xixian'] + $dv['weinan'] + $dv['baoji'] + $dv['tongchuan'] + $dv['shangluo'] + $dv['ankang'] + $dv['hanzhong'] + $dv['yanan'] + $dv['yulin'] + $dv['hancheng'], 2, '.', '');;
             $year[] = $dv;
         }
 
@@ -286,6 +287,7 @@ class CpGameReport
             'xian' => array_sum(array_column($data, 'xian')),
             'yangling' => array_sum(array_column($data, 'yangling')),
             'xianyang' => array_sum(array_column($data, 'xianyang')),
+            'xixian' => array_sum(array_column($data, 'xixian')),
             'weinan' => array_sum(array_column($data, 'weinan')),
             'baoji' => array_sum(array_column($data, 'baoji')),
             'tongchuan' => array_sum(array_column($data, 'tongchuan')),
