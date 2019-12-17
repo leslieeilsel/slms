@@ -22,6 +22,7 @@
     "iview": "^3.4.2",
     "js-cookie": "^2.2.0",
     "js-yaml": "3.13.1",
+    "laravel-file-manager": "^2.4.9",
     "lodash": "4.17.13",
     "particles.js": "^2.0.0",
     "vue": "^2.6.7",

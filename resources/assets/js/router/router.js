@@ -12,6 +12,7 @@ export const constantRouterMap = [
   { path: '/login', component: require('views/login/index') },
   { path: '/password/send', component: require('views/login/password/email') },
   { path: '/password/reset/:token', component: require('views/login/password/reset') },
+  { path: '/filemanager', component: require('views/file-manager/FileManager') },
 ];
 
 // 导出所有的路由配置
