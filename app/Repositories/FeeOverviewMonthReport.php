@@ -440,7 +440,7 @@ class FeeOverviewMonthReport
             );
             $query->whereIn('date', array_merge($thisDate, $lastDate));
         }
-        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6104', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
+        $data = $query->whereIn('region_num', ['6101', '6106', '6107', '6133', '6110', '6113', '6116', '6117', '6119', '6121', '6124', '6127', '6130'])
             ->groupBy('year', 'region_name')
             ->orderBy('region_num')
             ->get();

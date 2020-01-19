@@ -196,7 +196,7 @@ class CpGameReport
                 DB::raw("SUM(case when region_num = 6101 then sale_amt else 0 end ) as xian"),
                 DB::raw("SUM(case when region_num = 6106 then sale_amt else 0 end ) as yangling"),
                 DB::raw("SUM(case when region_num = 6107 then sale_amt else 0 end ) as xianyang"),
-                DB::raw("SUM(case when region_num = 6104 then sale_amt else 0 end ) as xixian"),
+                DB::raw("SUM(case when region_num = 6133 then sale_amt else 0 end ) as xixian"),
                 DB::raw("SUM(case when region_num = 6110 then sale_amt else 0 end ) as weinan"),
                 DB::raw("SUM(case when region_num = 6113 then sale_amt else 0 end ) as baoji"),
                 DB::raw("SUM(case when region_num = 6116 then sale_amt else 0 end ) as tongchuan"),
