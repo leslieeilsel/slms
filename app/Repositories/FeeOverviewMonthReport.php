@@ -275,7 +275,8 @@ class FeeOverviewMonthReport
                 'range' => "day"
             ];
             $body2 = $this->getMonthFeeData($date2, $fee, $action);
-            $body2 = $this->bodyFormat($body2, $action);if (count($body2) > count($body1)) {
+            $body2 = $this->bodyFormat($body2, $action);
+            if (count($body2) > count($body1)) {
                 $xixian = [[
                     '西咸',
                     'tc1' => '0.00',
