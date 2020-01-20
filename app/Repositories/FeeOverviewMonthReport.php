@@ -234,35 +234,48 @@ class FeeOverviewMonthReport
      */
     public function getGyjOverviewMonthData($date, $action)
     {
+        $start = $date['startMonth'];
+        $end = $date['endMonth'];
+        if ($date['range'] === 'month') {
+            $start .= '-01'; 
+            $endmonth = explode('-', $end);
+            $daysCount = cal_days_in_month(CAL_GREGORIAN, $endmonth[1], $endmonth[0]);
+            $end .= '-'.sprintf("%02d", $daysCount);
+        }
 
+        $date = [
+            'startMonth' => $start,
+            'endMonth' => $end,
+            'range' => "day"
+        ];
         $fee = ['0.0925', '0.09', '0.085', '0.07', '0.045', '0.055', '0.05'];
         $fee2 = ['0.0925', '0.09', '0.085', '0.0725', '0.05', '0.055', '0.05'];
 
-        $startDate = explode('-', $date['startMonth']);
-        $endDate = explode('-', $date['endMonth']);
-        if ((int) $startDate[0] == 2019 && (int) $startDate[1] >= 2) {
-            $body = $this->getMonthFeeData($date, $fee2, $action);
-            $body = $this->bodyFormat($body, $action);
-        } else if (((int) $endDate[0] == 2019 && (int) $endDate[1] < 2) || (int) $endDate[0] < 2019) {
+        $startDate = (int)str_replace('-', '', $start);
+        $endDate = (int)str_replace('-', '', $end);
+
+        $standard = 20190203;
+        if ($endDate <= $standard) {
             $body = $this->getMonthFeeData($date, $fee, $action);
+            $body = $this->bodyFormat($body, $action);
+        } elseif ($startDate > $standard) {
+            $body = $this->getMonthFeeData($date, $fee2, $action);
             $body = $this->bodyFormat($body, $action);
         } else {
             $date1 = [
-                'startMonth' => "2019-01",
-                'endMonth' => "2019-01",
-                'range' => "month"
+                'startMonth' => $start,
+                'endMonth' => "2019-02-03",
+                'range' => "day"
             ];
             $body1 = $this->getMonthFeeData($date1, $fee, $action);
             $body1 = $this->bodyFormat($body1, $action);
             $date2 = [
-                'startMonth' => "2019-02",
-                'endMonth' => $date['endMonth'],
-                'range' => "month"
+                'startMonth' => "2019-02-04",
+                'endMonth' => $end,
+                'range' => "day"
             ];
             $body2 = $this->getMonthFeeData($date2, $fee, $action);
-            $body2 = $this->bodyFormat($body2, $action);
-
-            if (count($body2) > count($body1)) {
+            $body2 = $this->bodyFormat($body2, $action);if (count($body2) > count($body1)) {
                 $xixian = [[
                     '西咸',
                     'tc1' => '0.00',
@@ -308,11 +321,6 @@ class FeeOverviewMonthReport
                     ];
                 }
             }
-
-            $body3 = $this->getMonthFeeData($date, $fee, $action);
-            $body3 = $this->bodyFormat($body3, $action);
-            $body[count($body1) - 2] = $body3[count($body1) - 2];
-            $body[count($body1) - 1] = $body3[count($body1) - 1];
         }
 
         return $body;
