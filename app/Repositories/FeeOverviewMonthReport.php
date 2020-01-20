@@ -255,10 +255,20 @@ class FeeOverviewMonthReport
         $endDate = (int)str_replace('-', '', $end);
 
         $standard = 20190203;
-        if ($endDate <= $standard) {
+        if ($endDate <= 20190131) {
+            $date = [
+                'startMonth' => date('Y-m', strtotime($start)),
+                'endMonth' => date('Y-m', strtotime($end)),
+                'range' => "month"
+            ];
             $body = $this->getMonthFeeData($date, $fee, $action);
             $body = $this->bodyFormat($body, $action);
-        } elseif ($startDate > $standard) {
+        } elseif ($startDate >= 20190301) {
+            $date = [
+                'startMonth' => date('Y-m', strtotime($start)),
+                'endMonth' => date('Y-m', strtotime($end)),
+                'range' => "month"
+            ];
             $body = $this->getMonthFeeData($date, $fee2, $action);
             $body = $this->bodyFormat($body, $action);
         } else {
@@ -322,6 +332,10 @@ class FeeOverviewMonthReport
                     ];
                 }
             }
+            $body3 = $this->getMonthFeeData($date, $fee, $action);	
+            $body3 = $this->bodyFormat($body3, $action);	
+            $body[count($body1) - 2] = $body3[count($body1) - 2];	
+            $body[count($body1) - 1] = $body3[count($body1) - 1];
         }
 
         return $body;
