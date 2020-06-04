@@ -39,7 +39,7 @@
           </Select>
         </Form-item>
         <Form-item label="游戏名称" prop="gameName">
-          <Input v-model="searchForm.gameName" placeholder="支持迷糊搜索" style="width:150px"></Input>
+          <Input v-model="searchForm.gameName" placeholder="支持模糊搜索" style="width:150px"></Input>
         </Form-item>
         <Form-item style="margin-left:-70px;">
           <Button type="primary" @click="filterData" :disabled="disable" icon="ios-search">查询</Button>
